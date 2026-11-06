@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Многослойный «мягкий градиент» для адаптивной иконки -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Глубокий синий по краям -->
+    <path
+        android:fillColor="#2A4E9E"
+        android:pathData="M0,0 H108 V108 H0 Z" />
+
+    <!-- Средний слой -->
+    <path
+        android:fillColor="#4472E0"
+        android:fillAlpha="0.85"
+        android:pathData="M56,46 m-66,0 a66,66 0 1,1 132,0 a66,66 0 1,1 -132,0" />
+
+    <!-- Ближе к центру — светлее -->
+    <path
+        android:fillColor="#5E8BF2"
+        android:fillAlpha="0.80"
+        android:pathData="M50,42 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
+
+    <!-- Мягкое ядро-подсветка -->
+    <path
+        android:fillColor="#7AA4FF"
+        android:fillAlpha="0.55"
+        android:pathData="M46,40 m-24,0 a24,24 0 1,1 48,0 a24,24 0 1,1 -48,0" />
+</vector>

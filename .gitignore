@@ -1,0 +1,22 @@
+# Build output
+apk-build/build/
+apk-build/assets/
+PixelWeather.apk
+*.apk
+
+# Local toolchains and downloaded dependencies
+apk-build/jdk-17.0.21+9/
+apk-build/sdk/
+apk-build/downloads/
+
+# Local signing files
+apk-build/debug.keystore
+*.keystore
+*.jks
+
+# OS and editor junk
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
