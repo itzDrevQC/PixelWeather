@@ -14,7 +14,6 @@ Material You weather app for Android. The interface is a single `weather.html` f
 
 ```text
 PixelWeather/
-├── weather.html              # Исходник интерфейса
 ├── apk-build/
 │   ├── AndroidManifest.xml
 │   ├── build.ps1             # Сборка APK
@@ -24,6 +23,8 @@ PixelWeather/
 ├── .gitignore
 └── README.md
 ```
+
+Основной интерфейс приложения находится в `weather.html` в корне проекта.
 
 ## Сборка APK
 
