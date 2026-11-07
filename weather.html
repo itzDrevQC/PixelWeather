@@ -4637,8 +4637,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                         'Своя типографика: загрузите TTF или OTF — шрифт применится ко всему интерфейсу',
                         'Три набора иконок погоды: Noto, контурный Material и новый 8-битный Pixel',
                         'Единая «Кастомизация»: тема, палитра, фигурка у иконки, шрифты и наборы иконок',
-                        'Шрифт и набор иконок сохраняются на устройстве и работают офлайн',
-                        'Отдельная настройка темы убрана — тема осталась в «Кастомизации»'
+                        'Шрифт и набор иконок сохраняются на устройстве и работают офлайн'
                     ]
                 },
                 {
@@ -4651,7 +4650,8 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                         'Новый экран запуска: без белой вспышки, с загрузкой по центру',
                         'Город разделён на название и стрелку; под названием видно область и округ',
                         'Круглые кнопки верхней панели залиты цветом Monet',
-                        'Новая вкладка «Что нового» рядом с настройками'
+                        'Новая вкладка «Что нового» рядом с настройками',
+                        'Исправлено: при выборе палитры в первом запуске больше не остаются галочки от предыдущих вариантов'
                     ]
                 },
                 {
@@ -4680,8 +4680,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                         'Your own typography: upload a TTF or OTF and the font applies to the whole interface',
                         'Three weather icon sets: Noto, outline Material, and the new 8-bit Pixel',
                         'Unified Customization: theme, palette, icon ornament, fonts, and icon sets',
-                        'The selected font and icon set are stored on the device and work offline',
-                        'Separate theme setting removed — the theme now lives in Customization'
+                        'The selected font and icon set are stored on the device and work offline'
                     ]
                 },
                 {
@@ -4694,7 +4693,8 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                         'New launch screen: no white flash, centered loading',
                         'City pill split into name and arrow; region and district shown below',
                         'Top-bar round buttons filled with Monet color',
-                        'New What’s new tab next to settings'
+                        'New What’s new tab next to settings',
+                        'Fixed: palette checkmarks from previous choices no longer remain on first launch'
                     ]
                 },
                 {
@@ -5942,8 +5942,10 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         document.getElementById('hue-deg').innerText = hue + '°';
         
         if (el) {
-            document.querySelectorAll('.color-seed').forEach(c => c.classList.remove('selected'));
-            el.classList.add('selected');
+            const hueText = String(hue);
+            document.querySelectorAll('.color-seed, .ob-seed').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.color-seed[data-hue="' + hueText + '"], .ob-seed[data-hue="' + hueText + '"]').forEach(c => c.classList.add('selected'));
+            if (!el.classList.contains('selected')) el.classList.add('selected');
         }
 
         // Ручной выбор всегда отключает режим «из обоев»
