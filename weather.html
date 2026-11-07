@@ -4014,7 +4014,7 @@
         fontChoice: 'comfortaa', // comfortaa | system | custom
         fontName: '',            // имя загруженного TTF/OTF
         iconPack: 'noto',        // noto | material | pixel
-        lang: 'ru',              // язык интерфейса (I18N_LANGS)
+        lang: 'en',              // язык интерфейса (I18N_LANGS); при первом запуске — английский
         onboarded: false         // первичная настройка (язык → тема → город) пройдена
     };
 
@@ -4726,8 +4726,8 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         tr: ['K', 'KD', 'D', 'GD', 'G', 'GB', 'B', 'KB']
     };
 
-    let currentLang = 'ru';
-    let currentLocale = 'ru-RU';
+    let currentLang = 'en';
+    let currentLocale = 'en-US';
     let i18nScheduled = false;
 
     // Перевод одной строки: нет словаря или нет ключа — возвращаем исходник
@@ -4847,7 +4847,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
     }
 
     function setLanguage(code) {
-        currentLang = I18N_LANGS.some(item => item[0] === code) ? code : 'ru';
+        currentLang = I18N_LANGS.some(item => item[0] === code) ? code : 'en';
         currentLocale = I18N_LOCALES[currentLang];
         document.documentElement.setAttribute('lang', currentLang);
         translateDom();
@@ -5819,6 +5819,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         document.querySelectorAll('.ob-lang').forEach(el => {
             el.classList.toggle('selected', el.getAttribute('data-ob-lang') === code);
         });
+        if (I18N_LANGS.some(item => item[0] === code)) setLanguage(code);
         const nextBtn = document.getElementById('ob-next');
         if (nextBtn) nextBtn.disabled = false;
     }
@@ -5859,7 +5860,8 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         }
         const nextBtn = document.getElementById('ob-next');
         if (nextBtn) {
-            nextBtn.innerText = step === 3 ? t('Выбрать город') : t('Далее');
+            nextBtn.innerText = step === 3 ? 'Выбрать город' : 'Далее';
+            translateDom(nextBtn);
             nextBtn.disabled = step === 1 && !obLang;
         }
     }

@@ -2,60 +2,59 @@
 
 Material You weather app for Android. The interface is a single `weather.html` file rendered in a full-screen WebView. Fonts and weather icons are embedded, so the UI works offline; weather data is loaded from Open-Meteo.
 
-## Возможности
+## Features
 
-- Текущая погода, почасовой прогноз и прогноз на несколько дней.
-- Поиск города и список популярных городов.
-- Светлая и тёмная темы, несколько языков интерфейса.
-- Вкладка «Кастомизация»: тема, палитра, фигурка у иконки, свои шрифты TTF/OTF и три набора иконок погоды: Noto, Material, Pixel.
-- Без рекламы и регистрации.
-- Погодные данные: [Open-Meteo](https://open-meteo.com/).
+- Current weather, hourly forecast, and multi-day forecast.
+- City search and a list of popular cities.
+- Light and dark themes, multiple interface languages.
+- No ads and no sign-up.
+- Weather data: [Open-Meteo](https://open-meteo.com/).
 
-## Версии
+## Versions
 
-Старые версии не удаляются: каждый релиз хранится отдельно на GitHub.
+Older versions are never deleted: every release stays available on GitHub.
 
-| Версия | Дата | Релиз |
+| Version | Date | Release |
 | --- | --- | --- |
-| 1.1 | 7 ноября 2026 | [v1.1](https://github.com/itzDrevQC/PixelWeather/releases/tag/v1.1) |
-| 1.0 | 6 ноября 2026 | [v1.0](https://github.com/itzDrevQC/PixelWeather/releases/tag/v1.0) |
+| 1.1 | November 7, 2026 | [v1.1](https://github.com/itzDrevQC/PixelWeather/releases/tag/v1.1) |
+| 1.0 | November 6, 2026 | [v1.0](https://github.com/itzDrevQC/PixelWeather/releases/tag/v1.0) |
 
-Актуальная версия: [последний релиз](https://github.com/itzDrevQC/PixelWeather/releases/latest).
+Current version: [latest release](https://github.com/itzDrevQC/PixelWeather/releases/latest).
 
-## Структура
+## Structure
 
 ```text
 PixelWeather/
 ├── apk-build/
 │   ├── AndroidManifest.xml
-│   ├── build.ps1             # Сборка APK
-│   ├── make-icons.ps1        # Генерация PNG-иконок
-│   ├── java/                 # Исходники Android-обёртки
-│   └── res/                  # Ресурсы приложения
+│   ├── build.ps1             # Builds the APK
+│   ├── make-icons.ps1        # Generates PNG icons
+│   ├── java/                 # Android wrapper sources
+│   └── res/                  # App resources
 ├── .gitignore
 └── README.md
 ```
 
-Основной интерфейс приложения находится в `weather.html` в корне проекта.
+The main app interface lives in `weather.html` in the project root.
 
-## Сборка APK
+## Building the APK
 
-Нужен Windows с PowerShell 5.1+ и следующие локальные компоненты:
+You need Windows with PowerShell 5.1+ and the following local components:
 
-- JDK 17 — в `apk-build/jdk-17.0.21+9`;
-- Android SDK Build-Tools (`aapt2`, `d8`, `zipalign`, `apksigner`) — в `apk-build/sdk/android-14`;
-- Android 15 Platform (`android.jar`) — в `apk-build/sdk/android-35`.
+- JDK 17 — in `apk-build/jdk-17.0.21+9`;
+- Android SDK Build-Tools (`aapt2`, `d8`, `zipalign`, `apksigner`) — in `apk-build/sdk/android-14`;
+- Android 15 Platform (`android.jar`) — in `apk-build/sdk/android-35`.
 
-Эти каталоги не хранятся в репозитории. После их размещения сборка запускается из корня проекта:
+These directories are not stored in the repository. Once they are in place, run the build from the project root:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\apk-build\build.ps1
 ```
 
-Готовый файл появится в корне как `PixelWeather.apk`. Скрипт создаёт локальный `debug.keystore`, если его ещё нет; ключ и APK исключены из Git. Для публикации файла используйте GitHub Releases, а не коммит в репозиторий.
+The finished file appears in the root as `PixelWeather.apk`. The script creates a local `debug.keystore` if it does not exist yet; the key and APK are excluded from Git. To publish the file, use GitHub Releases instead of committing it to the repository.
 
-## Благодарности
+## Credits
 
-- **Comfortaa** — Johan Aakerlund, лицензия SIL Open Font License 1.1.
-- **Noto Color Emoji** (2D PNG) — Google, лицензия Apache 2.0.
-- **Open-Meteo** — открытый API погодных данных.
+- **Comfortaa** — Johan Aakerlund, SIL Open Font License 1.1.
+- **Noto Color Emoji** (2D PNG) — Google, Apache 2.0.
+- **Open-Meteo** — open weather data API.
