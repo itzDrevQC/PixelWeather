@@ -2,4 +2,8 @@
 <resources>
     <color name="ic_launcher_background">#4C7DF0</color>
     <color name="window_background">#F2F5F9</color>
+    <color name="launch_background">#0E1726</color>
+    <color name="launch_accent">#A8C7FA</color>
+    <color name="launch_badge_start">#4C7DF0</color>
+    <color name="launch_badge_end">#8AB4F8</color>
 </resources>

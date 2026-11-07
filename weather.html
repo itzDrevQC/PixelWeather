@@ -2841,6 +2841,224 @@
         body[data-view="settings"] .settings-group,
         body[data-view="palette"] .wallpaper-option,
         body[data-view="palette"] .hue-slider-box { box-shadow: none; }
+
+        /* ============================================================
+           PIXEL WEATHER 1.1 — MATERIAL 3 EXPRESSIVE
+           ============================================================ */
+        :root {
+            --md-motion-expressive: cubic-bezier(0.2, 1.12, 0.25, 1);
+            --md-motion-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --md-motion-standard: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        /* --- ВЕРХНЯЯ ПАНЕЛЬ: ГОРОД + ОТДЕЛЬНАЯ СТРЕЛКА --- */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            animation: topBarIn 0.55s var(--md-motion-expressive) backwards;
+        }
+        .city-cluster {
+            position: relative;
+            display: flex;
+            align-items: stretch;
+            flex: 1 1 auto;
+            min-width: 0;
+            max-width: min(62vw, 280px);
+            height: 56px;
+            border-radius: 28px;
+            background: var(--md-surface-container-high);
+            box-shadow: inset 0 0 0 1px hsla(var(--h), 30%, 50%, 0.12);
+            transition: background-color 0.25s var(--md-motion-standard), box-shadow 0.25s var(--md-motion-standard);
+        }
+        .city-main {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            min-width: 0;
+            flex: 1 1 auto;
+            padding: 0 10px 0 16px;
+            border: none;
+            border-radius: 28px 0 0 28px;
+            background: transparent;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            transition: background-color 0.22s var(--md-motion-standard), transform 0.22s var(--md-motion-spring);
+        }
+        .city-arrow {
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            flex: 0 0 44px;
+            border: none;
+            border-left: 1px solid var(--md-outline-variant);
+            border-radius: 0 28px 28px 0;
+            background: transparent;
+            color: var(--md-on-surface-variant);
+            cursor: pointer;
+            transition: background-color 0.22s var(--md-motion-standard), transform 0.22s var(--md-motion-spring), color 0.22s var(--md-motion-standard);
+        }
+        .city-main:hover, .city-arrow:hover { background: var(--md-surface-container-highest); }
+        .city-main:active, .city-arrow:active { transform: scale(0.96); }
+        .city-main .icon { width: 19px; height: 19px; color: var(--md-primary); }
+        .city-text { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; text-align: left; line-height: 1.1; }
+        #city-title { font-size: 15px; font-weight: 600; letter-spacing: 0.1px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .city-region { margin-top: 3px; font-size: 10px; line-height: 12px; font-weight: 500; letter-spacing: 0.2px; color: var(--md-on-surface-variant); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .city-chevron { width: 18px; height: 18px; transition: transform 0.38s var(--md-motion-spring); }
+        .city-arrow.open .city-chevron { transform: rotate(180deg); }
+        .city-arrow.open { background: var(--md-primary-container); color: var(--md-on-primary-container); }
+
+        .city-info {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 0;
+            width: min(304px, 84vw);
+            z-index: 60;
+            display: none;
+            padding: 16px;
+            border-radius: 24px;
+            background: var(--md-surface-container);
+            color: var(--md-on-surface);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18), inset 0 0 0 1px var(--md-outline-variant);
+            transform-origin: top left;
+        }
+        .city-info.open { display: block; animation: cityInfoIn 0.38s var(--md-motion-expressive) both; }
+        .city-info-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+        .city-info-name { font-size: 19px; font-weight: 700; letter-spacing: -0.2px; }
+        .city-info-country { font-size: 11px; font-weight: 600; color: var(--md-on-surface-variant); }
+        .city-info-row { display: flex; align-items: flex-start; gap: 8px; padding: 7px 0; border-top: 1px solid var(--md-outline-variant); font-size: 12px; line-height: 17px; color: var(--md-on-surface-variant); }
+        .city-info-row:first-of-type { border-top: none; }
+        .city-info-row .icon { width: 16px; height: 16px; margin-top: 1px; color: var(--md-primary); }
+        .city-info-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        .city-info-label { font-size: 10px; line-height: 12px; font-weight: 600; letter-spacing: 0.35px; text-transform: uppercase; color: var(--md-on-surface-variant); opacity: 0.75; }
+        .city-info-value { color: var(--md-on-surface); font-weight: 500; word-break: break-word; }
+
+        /* Заливка Monet только для круглых кнопок верхней панели */
+        .top-bar .icon-btn {
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            box-shadow: inset 0 0 0 1px hsla(var(--h), 35%, 50%, 0.14);
+        }
+        .top-bar .icon-btn:hover {
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            transform: translateY(-1px);
+            box-shadow: inset 0 0 0 1px hsla(var(--h), 35%, 50%, 0.2), 0 4px 10px rgba(0, 0, 0, 0.10);
+        }
+        .top-bar .icon-btn:active { transform: scale(0.92); }
+        .top-bar .icon-btn.active { background: var(--md-primary-container); color: var(--md-on-primary-container); }
+        .actions { gap: 6px; }
+
+        @media (max-width: 380px) {
+            .top-bar { gap: 6px; }
+            .city-cluster { max-width: calc(100% - 144px); }
+            .city-arrow { width: 40px; flex-basis: 40px; }
+            .top-bar .icon-btn { width: 42px; height: 42px; }
+            .actions { gap: 5px; }
+        }
+
+        /* --- ЭКРАН «ЧТО НОВОГО» --- */
+        .changelog-panel {
+            display: none;
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
+            margin: 0;
+            box-shadow: none;
+        }
+        body[data-view="changelog"] { padding: 0; background: var(--md-surface); }
+        body[data-view="changelog"] .app-container { max-width: 560px; padding: 0 20px calc(28px + env(safe-area-inset-bottom)); }
+        body[data-view="changelog"] .app-screen,
+        body[data-view="changelog"] .top-bar { display: none; }
+        body[data-view="changelog"] .changelog-panel { display: block; animation: panelIn 0.42s var(--md-motion-expressive) both; }
+        body[data-view="home"] .changelog-panel { display: none; }
+
+        .changelog-list { display: flex; flex-direction: column; gap: 12px; padding-top: 18px; }
+        .changelog-card {
+            background: var(--md-surface-container-low);
+            border-radius: var(--shape-md);
+            padding: 20px;
+            animation: cardEnter 0.5s var(--md-motion-expressive) backwards;
+            animation-delay: calc(var(--n, 0) * 40ms);
+        }
+        .changelog-card.current { background: var(--md-primary-container); color: var(--md-on-primary-container); }
+        .changelog-top { display: flex; align-items: center; gap: 8px; }
+        .changelog-version { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+        .changelog-badge {
+            padding: 3px 9px;
+            border-radius: 999px;
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .changelog-date { margin-left: auto; font-size: 11px; font-weight: 500; color: var(--md-on-surface-variant); }
+        .changelog-card.current .changelog-date { color: var(--md-on-primary-container); opacity: 0.75; }
+        .changelog-title { margin: 8px 0 10px; font-size: 15px; font-weight: 600; }
+        .changelog-items { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 13px; line-height: 18px; }
+        .changelog-items li::marker { color: var(--md-primary); }
+        .changelog-card.current .changelog-items li::marker { color: var(--md-on-primary-container); }
+
+        /* --- MOTION: EXPRESSIVE ENTER / STAGGER --- */
+        @keyframes topBarIn {
+            from { opacity: 0; transform: translateY(-12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes cityInfoIn {
+            from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes screenIn {
+            from { opacity: 0; transform: translateY(16px) scale(0.985); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes cardEnter {
+            from { opacity: 0; transform: translateY(14px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .app-screen { animation: screenIn 0.48s var(--md-motion-expressive) both; }
+        .settings-page.active { animation: screenIn 0.36s var(--md-motion-expressive) both; }
+        .hero-card { animation: screenIn 0.62s var(--md-motion-expressive) backwards; }
+        .icon-btn {
+            transition: transform 0.22s var(--md-motion-spring), background-color 0.22s var(--md-motion-standard),
+                color 0.22s var(--md-motion-standard), box-shadow 0.22s var(--md-motion-standard);
+        }
+        .hour-pill, .bento-tile {
+            transition: transform 0.24s var(--md-motion-spring), background-color 0.24s var(--md-motion-standard);
+            animation: cardEnter 0.5s var(--md-motion-expressive) backwards;
+        }
+        .hour-pill:active, .bento-tile:active { transform: scale(0.965); }
+        .hourly-row .hour-pill:nth-child(1) { animation-delay: 30ms; }
+        .hourly-row .hour-pill:nth-child(2) { animation-delay: 60ms; }
+        .hourly-row .hour-pill:nth-child(3) { animation-delay: 90ms; }
+        .hourly-row .hour-pill:nth-child(4) { animation-delay: 120ms; }
+        .bento-grid .bento-tile:nth-child(1) { animation-delay: 60ms; }
+        .bento-grid .bento-tile:nth-child(2) { animation-delay: 90ms; }
+        .bento-grid .bento-tile:nth-child(3) { animation-delay: 120ms; }
+        .bento-grid .bento-tile:nth-child(4) { animation-delay: 150ms; }
+        .bento-grid .bento-tile:nth-child(5) { animation-delay: 180ms; }
+        .bento-grid .bento-tile:nth-child(6) { animation-delay: 210ms; }
+        .bento-grid .bento-tile:nth-child(7) { animation-delay: 240ms; }
+        .bento-grid .bento-tile:nth-child(8) { animation-delay: 270ms; }
+        .bento-grid .bento-tile:nth-child(9) { animation-delay: 300ms; }
+
+        body.no-anim .app-screen,
+        body.no-anim .settings-page.active,
+        body.no-anim .hero-card,
+        body.no-anim .hour-pill,
+        body.no-anim .bento-tile,
+        body.no-anim .changelog-card,
+        body.no-anim .top-bar,
+        body.no-anim .city-info.open { animation: none !important; }
     </style>
 </head>
 <body data-view="home">
@@ -2939,16 +3157,57 @@
     
     <!-- Шапка -->
     <div class="top-bar">
-        <button class="city-pill" onclick="openCityModal()">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <span id="city-title">Выберите город</span>
-            <svg class="icon chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-        </button>
+        <div class="city-cluster" id="city-cluster">
+            <button class="city-main" id="city-main-btn" onclick="openCityModal()" title="Выбрать город" aria-label="Выбрать город">
+                <span class="city-text">
+                    <span id="city-title">Выберите город</span>
+                    <span class="city-region" id="city-region">Нажмите, чтобы выбрать</span>
+                </span>
+            </button>
+            <button class="city-arrow" id="city-arrow-btn" onclick="toggleCityInfo(event)" title="Информация о городе" aria-label="Информация о городе" aria-expanded="false">
+                <svg class="icon city-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="city-info" id="city-info" role="dialog" aria-label="Информация о городе" aria-hidden="true">
+                <div class="city-info-head">
+                    <span class="city-info-name" id="city-info-name">Город не выбран</span>
+                    <span class="city-info-country" id="city-info-country"></span>
+                </div>
+                <div class="city-info-row">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <span class="city-info-text">
+                        <span class="city-info-label">Область / регион</span>
+                        <span id="city-info-region" class="city-info-value">Выберите город, чтобы увидеть область и округ</span>
+                    </span>
+                </div>
+                <div class="city-info-row">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg>
+                    <span class="city-info-text">
+                        <span class="city-info-label">Округ / район</span>
+                        <span id="city-info-district" class="city-info-value">—</span>
+                    </span>
+                </div>
+                <div class="city-info-row">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
+                    <span class="city-info-text">
+                        <span class="city-info-label">Координаты</span>
+                        <span id="city-info-coords" class="city-info-value">—</span>
+                    </span>
+                </div>
+                <div class="city-info-row">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    <span class="city-info-text">
+                        <span class="city-info-label">Часовой пояс</span>
+                        <span id="city-info-timezone" class="city-info-value">—</span>
+                    </span>
+                </div>
+            </div>
+        </div>
         <div class="actions">
-            <button class="icon-btn" id="settings-btn" onclick="toggleSettingsPanel()" title="Настройки" aria-label="Настройки">
+            <button class="icon-btn" id="changelog-btn" onclick="toggleChangelogPanel()" title="Что нового" aria-label="Что нового">
                 <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
+                    <path d="M3 3v5h5"/>
+                    <path d="M12 7v5l3 2"/>
                 </svg>
             </button>
             <button class="icon-btn" id="monet-btn" onclick="toggleMonetPanel()" title="Цвета Monet" aria-label="Цвета Monet">
@@ -2960,11 +3219,11 @@
                     <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.65-.75 1.65-1.69 0-.44-.18-.84-.44-1.13-.29-.29-.44-.65-.44-1.12a1.64 1.64 0 0 1 1.67-1.67h2c3.05 0 5.56-2.5 5.56-5.55C22 6 17.46 2 12 2z"/>
                 </svg>
             </button>
-            <button class="icon-btn" id="theme-btn" onclick="toggleDarkMode()" title="Сменить тему" aria-label="Сменить тему">
-                <span class="theme-icon">
-                    <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                    <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-                </span>
+            <button class="icon-btn" id="settings-btn" onclick="toggleSettingsPanel()" title="Настройки" aria-label="Настройки">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
             </button>
         </div>
     </div>
@@ -3019,6 +3278,20 @@
             </div>
             <input type="range" min="0" max="360" value="215" class="hue-slider" id="hue-range" oninput="setCustomHue(this.value)">
         </div>
+    </div>
+
+    <!-- ЧТО НОВОГО -->
+    <div class="changelog-panel" id="changelog-panel">
+        <div class="panel-header">
+            <div>
+                <div class="panel-eyebrow">Pixel Weather</div>
+                <div class="panel-title">Что нового</div>
+            </div>
+            <button class="panel-close" onclick="closeView()" title="Назад" aria-label="Назад">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+            </button>
+        </div>
+        <div class="changelog-list" id="changelog-list"></div>
     </div>
 
     <!-- ПАНЕЛЬ НАСТРОЕК -->
@@ -3314,7 +3587,7 @@
                 <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
                 drev.qc@gmail.com
             </a>
-            <div class="dev-version">Pixel Weather • Material You 2.0</div>
+            <div class="dev-version">Pixel Weather • Material You 1.1</div>
         </div>
 
         <div class="settings-group">
@@ -3322,7 +3595,7 @@
             <div class="about-row"><span>Данные</span><strong>Open-Meteo</strong></div>
             <div class="about-row"><span>Дизайн</span><strong>Material Design 3</strong></div>
             <div class="about-row"><span>Палитра</span><strong>Monet + обои</strong></div>
-            <div class="about-row"><span>Версия</span><strong>2.0</strong></div>
+            <div class="about-row"><span>Версия</span><strong>1.1</strong></div>
         </div>
     </div>
 </div>
@@ -3584,6 +3857,363 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
 
     const I18N_LOCALES = { ru: 'ru-RU', en: 'en-US', de: 'de-DE', es: 'es-ES', fr: 'fr-FR', it: 'it-IT', pt: 'pt-BR', zh: 'zh-CN', ja: 'ja-JP', tr: 'tr-TR' };
 
+    // Новые строки v1.1. Держим отдельно, чтобы не переписывать длинные
+    // массивы I18N и не сбить их индексы.
+    const I18N_EXTRA = {
+        ru: {},
+        en: {
+            'Выбрать город': 'Select city',
+            'Информация о городе': 'City information',
+            'Нажмите, чтобы выбрать': 'Tap to choose',
+            'Город не выбран': 'No city selected',
+            'Выберите город, чтобы увидеть область и округ': 'Choose a city to see its region and district',
+            'Что нового': "What's new",
+            'История изменений': 'Changelog',
+            'Текущая версия': 'Current version',
+            'Область / регион': 'Region / area',
+            'Округ / район': 'District',
+            'Страна': 'Country',
+            'Координаты': 'Coordinates',
+            'Часовой пояс': 'Time zone',
+            'Центральный ФО': 'Central FD',
+            'Северо-Западный ФО': 'Northwestern FD',
+            'Южный ФО': 'Southern FD',
+            'Северо-Кавказский ФО': 'North Caucasian FD',
+            'Приволжский ФО': 'Volga FD',
+            'Уральский ФО': 'Ural FD',
+            'Сибирский ФО': 'Siberian FD',
+            'Дальневосточный ФО': 'Far Eastern FD',
+            'Англия': 'England',
+            'Иль-де-Франс': 'Île-de-France',
+            'Новый Южный Уэльс': 'New South Wales',
+            'Не указано': 'Not specified'
+        },
+        de: {
+            'Выбрать город': 'Stadt auswählen',
+            'Информация о городе': 'Stadtinformationen',
+            'Нажмите, чтобы выбрать': 'Zum Auswählen tippen',
+            'Город не выбран': 'Keine Stadt ausgewählt',
+            'Выберите город, чтобы увидеть область и округ': 'Wählen Sie eine Stadt, um Region und Bezirk zu sehen',
+            'Что нового': 'Was ist neu',
+            'История изменений': 'Änderungsverlauf',
+            'Текущая версия': 'Aktuelle Version',
+            'Область / регион': 'Region / Gebiet',
+            'Округ / район': 'Bezirk / Kreis',
+            'Страна': 'Land',
+            'Координаты': 'Koordinaten',
+            'Часовой пояс': 'Zeitzone',
+            'Центральный ФО': 'Zentraler FD',
+            'Северо-Западный ФО': 'Nordwestlicher FD',
+            'Южный ФО': 'Südlicher FD',
+            'Северо-Кавказский ФО': 'Nordkaukasischer FD',
+            'Приволжский ФО': 'Wolga-FD',
+            'Уральский ФО': 'Ural-FD',
+            'Сибирский ФО': 'Sibirischer FD',
+            'Дальневосточный ФО': 'Ferner Osten FD',
+            'Англия': 'England',
+            'Иль-де-Франс': 'Île-de-France',
+            'Новый Южный Уэльс': 'New South Wales',
+            'Не указано': 'Nicht angegeben'
+        },
+        es: {
+            'Выбрать город': 'Elegir ciudad',
+            'Информация о городе': 'Información de la ciudad',
+            'Нажмите, чтобы выбрать': 'Toca para elegir',
+            'Город не выбран': 'Ninguna ciudad seleccionada',
+            'Выберите город, чтобы увидеть область и округ': 'Elige una ciudad para ver su región y distrito',
+            'Что нового': 'Novedades',
+            'История изменений': 'Historial de cambios',
+            'Текущая версия': 'Versión actual',
+            'Область / регион': 'Región / área',
+            'Округ / район': 'Distrito',
+            'Страна': 'País',
+            'Координаты': 'Coordenadas',
+            'Часовой пояс': 'Zona horaria',
+            'Центральный ФО': 'DF Central',
+            'Северо-Западный ФО': 'DF Noroeste',
+            'Южный ФО': 'DF Sur',
+            'Северо-Кавказский ФО': 'DF Cáucaso Norte',
+            'Приволжский ФО': 'DF Volga',
+            'Уральский ФО': 'DF Ural',
+            'Сибирский ФО': 'DF Siberia',
+            'Дальневосточный ФО': 'DF Extremo Oriente',
+            'Англия': 'Inglaterra',
+            'Иль-де-Франс': 'Isla de Francia',
+            'Новый Южный Уэльс': 'Nueva Gales del Sur',
+            'Не указано': 'No especificado'
+        },
+        fr: {
+            'Выбрать город': 'Choisir une ville',
+            'Информация о городе': 'Informations sur la ville',
+            'Нажмите, чтобы выбрать': 'Touchez pour choisir',
+            'Город не выбран': 'Aucune ville sélectionnée',
+            'Выберите город, чтобы увидеть область и округ': 'Choisissez une ville pour voir sa région et son district',
+            'Что нового': 'Nouveautés',
+            'История изменений': 'Historique des versions',
+            'Текущая версия': 'Version actuelle',
+            'Область / регион': 'Région / zone',
+            'Округ / район': 'District',
+            'Страна': 'Pays',
+            'Координаты': 'Coordonnées',
+            'Часовой пояс': 'Fuseau horaire',
+            'Центральный ФО': 'District fédéral central',
+            'Северо-Западный ФО': 'District fédéral du Nord-Ouest',
+            'Южный ФО': 'District fédéral du Sud',
+            'Северо-Кавказский ФО': 'District fédéral du Caucase du Nord',
+            'Приволжский ФО': 'District fédéral de la Volga',
+            'Уральский ФО': "District fédéral de l'Oural",
+            'Сибирский ФО': 'District fédéral de Sibérie',
+            'Дальневосточный ФО': "District fédéral de l'Extrême-Orient",
+            'Англия': 'Angleterre',
+            'Иль-де-Франс': 'Île-de-France',
+            'Новый Южный Уэльс': 'Nouvelle-Galles du Sud',
+            'Не указано': 'Non spécifié'
+        },
+        it: {
+            'Выбрать город': 'Scegli città',
+            'Информация о городе': 'Informazioni sulla città',
+            'Нажмите, чтобы выбрать': 'Tocca per scegliere',
+            'Город не выбран': 'Nessuna città selezionata',
+            'Выберите город, чтобы увидеть область и округ': 'Scegli una città per vedere regione e distretto',
+            'Что нового': 'Novità',
+            'История изменений': 'Cronologia versioni',
+            'Текущая версия': 'Versione attuale',
+            'Область / регион': 'Regione / area',
+            'Округ / район': 'Distretto',
+            'Страна': 'Paese',
+            'Координаты': 'Coordinate',
+            'Часовой пояс': 'Fuso orario',
+            'Центральный ФО': 'Distretto federale centrale',
+            'Северо-Западный ФО': 'Distretto federale nordoccidentale',
+            'Южный ФО': 'Distretto federale meridionale',
+            'Северо-Кавказский ФО': 'Distretto federale del Caucaso settentrionale',
+            'Приволжский ФО': 'Distretto federale del Volga',
+            'Уральский ФО': 'Distretto federale degli Urali',
+            'Сибирский ФО': 'Distretto federale siberiano',
+            'Дальневосточный ФО': "Distretto federale dell'Estremo Oriente",
+            'Англия': 'Inghilterra',
+            'Иль-де-Франс': 'Île-de-France',
+            'Новый Южный Уэльс': 'Nuovo Galles del Sud',
+            'Не указано': 'Non specificato'
+        },
+        pt: {
+            'Выбрать город': 'Escolher cidade',
+            'Информация о городе': 'Informações da cidade',
+            'Нажмите, чтобы выбрать': 'Toque para escolher',
+            'Город не выбран': 'Nenhuma cidade selecionada',
+            'Выберите город, чтобы увидеть область и округ': 'Escolha uma cidade para ver a região e o distrito',
+            'Что нового': 'Novidades',
+            'История изменений': 'Histórico de versões',
+            'Текущая версия': 'Versão atual',
+            'Область / регион': 'Região / área',
+            'Округ / район': 'Distrito',
+            'Страна': 'País',
+            'Координаты': 'Coordenadas',
+            'Часовой пояс': 'Fuso horário',
+            'Центральный ФО': 'Distrito federal central',
+            'Северо-Западный ФО': 'Distrito federal noroeste',
+            'Южный ФО': 'Distrito federal sul',
+            'Северо-Кавказский ФО': 'Distrito federal do Cáucaso Norte',
+            'Приволжский ФО': 'Distrito federal do Volga',
+            'Уральский ФО': 'Distrito federal dos Urais',
+            'Сибирский ФО': 'Distrito federal da Sibéria',
+            'Дальневосточный ФО': 'Distrito federal do Extremo Oriente',
+            'Англия': 'Inglaterra',
+            'Иль-де-Франс': 'Ilha de França',
+            'Новый Южный Уэльс': 'Nova Gales do Sul',
+            'Не указано': 'Não especificado'
+        },
+        zh: {
+            'Выбрать город': '选择城市',
+            'Информация о городе': '城市信息',
+            'Нажмите, чтобы выбрать': '点击选择',
+            'Город не выбран': '未选择城市',
+            'Выберите город, чтобы увидеть область и округ': '选择城市以查看地区和区县',
+            'Что нового': '新功能',
+            'История изменений': '版本历史',
+            'Текущая версия': '当前版本',
+            'Область / регион': '地区 / 区域',
+            'Округ / район': '区县',
+            'Страна': '国家',
+            'Координаты': '坐标',
+            'Часовой пояс': '时区',
+            'Центральный ФО': '中央联邦区',
+            'Северо-Западный ФО': '西北联邦区',
+            'Южный ФО': '南部联邦区',
+            'Северо-Кавказский ФО': '北高加索联邦区',
+            'Приволжский ФО': '伏尔加联邦区',
+            'Уральский ФО': '乌拉尔联邦区',
+            'Сибирский ФО': '西伯利亚联邦区',
+            'Дальневосточный ФО': '远东联邦区',
+            'Англия': '英格兰',
+            'Иль-де-Франс': '法兰西岛',
+            'Новый Южный Уэльс': '新南威尔士',
+            'Не указано': '未指定'
+        },
+        ja: {
+            'Выбрать город': '都市を選択',
+            'Информация о городе': '都市情報',
+            'Нажмите, чтобы выбрать': 'タップして選択',
+            'Город не выбран': '都市が選択されていません',
+            'Выберите город, чтобы увидеть область и округ': '都市を選択すると地域と地区が表示されます',
+            'Что нового': '新機能',
+            'История изменений': 'バージョン履歴',
+            'Текущая версия': '現在のバージョン',
+            'Область / регион': '地域 / エリア',
+            'Округ / район': '地区',
+            'Страна': '国',
+            'Координаты': '座標',
+            'Часовой пояс': 'タイムゾーン',
+            'Центральный ФО': '中央連邦管区',
+            'Северо-Западный ФО': '北西連邦管区',
+            'Южный ФО': '南部連邦管区',
+            'Северо-Кавказский ФО': '北カフカス連邦管区',
+            'Приволжский ФО': '沿ヴォルガ連邦管区',
+            'Уральский ФО': 'ウラル連邦管区',
+            'Сибирский ФО': 'シベリア連邦管区',
+            'Дальневосточный ФО': '極東連邦管区',
+            'Англия': 'イングランド',
+            'Иль-де-Франс': 'イル＝ド＝フランス',
+            'Новый Южный Уэльс': 'ニューサウスウェールズ',
+            'Не указано': '未設定'
+        },
+        tr: {
+            'Выбрать город': 'Şehir seç',
+            'Информация о городе': 'Şehir bilgileri',
+            'Нажмите, чтобы выбрать': 'Seçmek için dokunun',
+            'Город не выбран': 'Şehir seçilmedi',
+            'Выберите город, чтобы увидеть область и округ': 'Bölge ve ilçeyi görmek için bir şehir seçin',
+            'Что нового': 'Yenilikler',
+            'История изменений': 'Sürüm geçmişi',
+            'Текущая версия': 'Geçerli sürüm',
+            'Область / регион': 'Bölge / alan',
+            'Округ / район': 'İlçe',
+            'Страна': 'Ülke',
+            'Координаты': 'Koordinatlar',
+            'Часовой пояс': 'Saat dilimi',
+            'Центральный ФО': 'Merkez Federal Bölgesi',
+            'Северо-Западный ФО': 'Kuzeybatı Federal Bölgesi',
+            'Южный ФО': 'Güney Federal Bölgesi',
+            'Северо-Кавказский ФО': 'Kuzey Kafkas Federal Bölgesi',
+            'Приволжский ФО': 'Volga Federal Bölgesi',
+            'Уральский ФО': 'Ural Federal Bölgesi',
+            'Сибирский ФО': 'Sibirya Federal Bölgesi',
+            'Дальневосточный ФО': 'Uzak Doğu Federal Bölgesi',
+            'Англия': 'İngiltere',
+            'Иль-де-Франс': 'Île-de-France',
+            'Новый Южный Уэльс': 'Yeni Güney Galler',
+            'Не указано': 'Belirtilmemiş'
+        }
+    };
+
+    // Короткие обозначения федеральных округов для строки под городом.
+    const I18N_DISTRICT_SHORT = {
+        ru: {},
+        en: {
+            'ЦФО': 'CFD', 'СЗФО': 'NWFD', 'ЮФО': 'SFD', 'СКФО': 'NCFD',
+            'ПФО': 'VFD', 'УФО': 'UFD', 'СФО': 'SibFD', 'ДФО': 'FEFD'
+        },
+        de: {
+            'ЦФО': 'ZFD', 'СЗФО': 'NWFD', 'ЮФО': 'SFD', 'СКФО': 'NKFD',
+            'ПФО': 'WFD', 'УФО': 'UFD', 'СФО': 'SibFD', 'ДФО': 'FEFD'
+        },
+        es: {
+            'ЦФО': 'DFC', 'СЗФО': 'DFNO', 'ЮФО': 'DFS', 'СКФО': 'DFCN',
+            'ПФО': 'DFV', 'УФО': 'DFU', 'СФО': 'DFSib', 'ДФО': 'DFEO'
+        },
+        fr: {
+            'ЦФО': 'DFC', 'СЗФО': 'DFNO', 'ЮФО': 'DFS', 'СКФО': 'DFCN',
+            'ПФО': 'DFV', 'УФО': 'DFU', 'СФО': 'DFSib', 'ДФО': 'DFEO'
+        },
+        it: {
+            'ЦФО': 'DFC', 'СЗФО': 'DFNO', 'ЮФО': 'DFS', 'СКФО': 'DFCN',
+            'ПФО': 'DFV', 'УФО': 'DFU', 'СФО': 'DFSib', 'ДФО': 'DFEO'
+        },
+        pt: {
+            'ЦФО': 'DFC', 'СЗФО': 'DFNO', 'ЮФО': 'DFS', 'СКФО': 'DFCN',
+            'ПФО': 'DFV', 'УФО': 'DFU', 'СФО': 'DFSib', 'ДФО': 'DFEO'
+        },
+        zh: {
+            'ЦФО': '中央', 'СЗФО': '西北', 'ЮФО': '南部', 'СКФО': '北高',
+            'ПФО': '伏尔加', 'УФО': '乌拉尔', 'СФО': '西伯', 'ДФО': '远东'
+        },
+        ja: {
+            'ЦФО': '中央', 'СЗФО': '北西', 'ЮФО': '南部', 'СКФО': '北カフ',
+            'ПФО': '沿ヴォルガ', 'УФО': 'ウラル', 'СФО': 'シベリア', 'ДФО': '極東'
+        },
+        tr: {
+            'ЦФО': 'MFB', 'СЗФО': 'KBFB', 'ЮФО': 'GFB', 'СКФО': 'KKFB',
+            'ПФО': 'VFB', 'УФО': 'UFB', 'СФО': 'SFB', 'ДФО': 'UDFB'
+        }
+    };
+
+    const APP_VERSION = '1.1';
+
+    const CHANGELOG_I18N = {
+        ru: {
+            current: 'Текущая',
+            versions: [
+                {
+                    version: '1.1',
+                    date: 'Ноябрь 2026',
+                    current: true,
+                    title: 'Material 3 Expressive',
+                    items: [
+                        'Плавные пружинные анимации и переходы Material 3 Expressive',
+                        'Новый экран запуска: без белой вспышки, с загрузкой по центру',
+                        'Город разделён на название и стрелку; под названием видно область и округ',
+                        'Круглые кнопки верхней панели залиты цветом Monet',
+                        'Новая вкладка «Что нового» рядом с настройками',
+                        'Отдельная кнопка смены темы убрана — тема осталась в кастомизации'
+                    ]
+                },
+                {
+                    version: '1.0',
+                    date: '6 ноября 2026',
+                    current: false,
+                    title: 'Первый релиз',
+                    items: [
+                        'Первый публичный релиз Pixel Weather',
+                        'Погода по Open-Meteo и 10 языков интерфейса',
+                        'Material You: палитра, обои и геометрия карточек',
+                        'Офлайн-шрифт Comfortaa и эмодзи Noto'
+                    ]
+                }
+            ]
+        },
+        en: {
+            current: 'Current',
+            versions: [
+                {
+                    version: '1.1',
+                    date: 'November 2026',
+                    current: true,
+                    title: 'Material 3 Expressive',
+                    items: [
+                        'Material 3 Expressive spring animations and transitions',
+                        'New launch screen: no white flash, centered loading',
+                        'City pill split into name and arrow; region and district shown below',
+                        'Top-bar round buttons filled with Monet color',
+                        'New What’s new tab next to settings',
+                        'Theme button removed from the top bar; themes stay in customization'
+                    ]
+                },
+                {
+                    version: '1.0',
+                    date: 'November 6, 2026',
+                    current: false,
+                    title: 'First release',
+                    items: [
+                        'First public Pixel Weather release',
+                        'Open-Meteo weather and 10 interface languages',
+                        'Material You: palette, wallpaper and card geometry',
+                        'Offline Comfortaa font and Noto emoji'
+                    ]
+                }
+            ]
+        }
+    };
+
     const I18N_WIND_DIRS = {
         ru: ['С', 'СВ', 'В', 'ЮВ', 'Ю', 'ЮЗ', 'З', 'СЗ'],
         en: ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'],
@@ -3603,6 +4233,11 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
 
     // Перевод одной строки: нет словаря или нет ключа — возвращаем исходник
     function t(source) {
+        if (typeof source !== 'string' || !source) return source;
+        const extra = I18N_EXTRA[currentLang];
+        if (extra && typeof extra[source] === 'string' && extra[source]) return extra[source];
+        const shortDistricts = I18N_DISTRICT_SHORT[currentLang];
+        if (shortDistricts && typeof shortDistricts[source] === 'string' && shortDistricts[source]) return shortDistricts[source];
         const dict = I18N[currentLang];
         if (!dict) return source;
         const index = I18N_INDEX[source];
@@ -3702,6 +4337,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             applyGeometry();
             applyHeroOrnament();
             setStatus(t(statusSource));
+            updateCityRegion();
+            updateCityInfo();
+            if (document.body.getAttribute('data-view') === 'changelog') renderChangelog();
             if (lastWeather) renderUI(lastWeather);
         } catch (e) {}
     }
@@ -3757,7 +4395,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                 dark: saved.dark === true,
                 chroma: Number.isInteger(saved.chroma) ? saved.chroma : DEFAULT_SETTINGS.chroma,
                 city: (city && typeof city.name === 'string' && Number.isFinite(city.lat) && Number.isFinite(city.lon))
-                    ? { name: city.name, lat: city.lat, lon: city.lon }
+                    ? { name: city.name, lat: city.lat, lon: city.lon, meta: normalizeCityMeta(city.meta) }
                     : null,
                 colorSource: saved.colorSource === 'wallpaper' ? 'wallpaper' : 'manual',
                 wallpaperHue: (typeof wallpaperHue === 'number' && Number.isFinite(wallpaperHue))
@@ -4519,7 +5157,10 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
 
     // === ОТДЕЛЬНЫЕ ЭКРАНЫ ВМЕСТО ПАНЕЛЕЙ ПОВЕРХ ПОГОДЫ ===
     function setView(view) {
-        document.body.setAttribute('data-view', ['home', 'settings', 'palette'].indexOf(view) !== -1 ? view : 'home');
+        const target = ['home', 'settings', 'palette', 'changelog'].indexOf(view) !== -1 ? view : 'home';
+        closeCityInfo();
+        if (target === 'changelog') renderChangelog();
+        document.body.setAttribute('data-view', target);
         window.scrollTo(0, 0);
     }
 
@@ -4534,6 +5175,87 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
     function toggleMonetPanel() {
         setView('palette');
     }
+
+    function toggleChangelogPanel() {
+        if (document.body.getAttribute('data-view') === 'changelog') {
+            closeView();
+        } else {
+            setView('changelog');
+        }
+    }
+
+    // === ИСТОРИЯ ВЕРСИЙ ===
+    function renderChangelog() {
+        const box = document.getElementById('changelog-list');
+        if (!box) return;
+
+        const pack = CHANGELOG_I18N[currentLang] || CHANGELOG_I18N.en;
+        const versions = Array.isArray(pack.versions) ? pack.versions : [];
+
+        box.innerHTML = versions.map((release, index) => {
+            const badge = release.current
+                ? '<span class="changelog-badge">' + pack.current + '</span>'
+                : '';
+            const items = (release.items || []).map(item => '<li>' + item + '</li>').join('');
+            return '<article class="changelog-card' + (release.current ? ' current' : '') + '" style="--n:' + index + '">' +
+                '<div class="changelog-top">' +
+                    '<span class="changelog-version">' + release.version + '</span>' +
+                    badge +
+                    '<span class="changelog-date">' + release.date + '</span>' +
+                '</div>' +
+                '<div class="changelog-title">' + release.title + '</div>' +
+                '<ul class="changelog-items">' + items + '</ul>' +
+            '</article>';
+        }).join('');
+    }
+
+    // === ИНФОРМАЦИЯ О ГОРОДЕ ===
+    function toggleCityInfo(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        const panel = document.getElementById('city-info');
+        const button = document.getElementById('city-arrow-btn');
+        if (!panel) return;
+
+        const willOpen = !panel.classList.contains('open');
+        if (willOpen) {
+            updateCityInfo();
+            panel.classList.add('open');
+            panel.setAttribute('aria-hidden', 'false');
+        } else {
+            panel.classList.remove('open');
+            panel.setAttribute('aria-hidden', 'true');
+        }
+        if (button) {
+            button.classList.toggle('open', willOpen);
+            button.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        }
+    }
+
+    function closeCityInfo() {
+        const panel = document.getElementById('city-info');
+        const button = document.getElementById('city-arrow-btn');
+        if (panel) {
+            panel.classList.remove('open');
+            panel.setAttribute('aria-hidden', 'true');
+        }
+        if (button) {
+            button.classList.remove('open');
+            button.setAttribute('aria-expanded', 'false');
+        }
+    }
+
+    document.addEventListener('click', event => {
+        if (!document.getElementById('city-info')) return;
+        if (event.target instanceof Element && event.target.closest('.city-cluster')) return;
+        closeCityInfo();
+    }, { passive: true });
+
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeCityInfo();
+    });
 
     // === ПЕРВИЧНАЯ НАСТРОЙКА ПРИ ПЕРВОМ ЗАПУСКЕ ===
     let obStep = 1;
@@ -4668,6 +5390,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
 
         applySettings();
         document.getElementById('city-title').innerText = t('Выберите город');
+        updateCityRegion(null, null);
+        updateCityInfo('', null);
+        closeCityInfo();
         setStatus(t('Настройки сброшены'));
         setView('home');
         closeCityModal();
@@ -4783,10 +5508,14 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         currentCity = settings.city;
         if (settings.city) {
             document.getElementById('city-title').innerText = t(settings.city.name);
+            updateCityRegion(settings.city.name, settings.city.meta);
+            updateCityInfo(settings.city.name, settings.city.meta);
             document.getElementById('city-modal').classList.add('hidden');
-            selectCity(settings.city.name, settings.city.lat, settings.city.lon);
+            selectCity(settings.city.name, settings.city.lat, settings.city.lon, settings.city.meta);
         } else {
             document.getElementById('city-title').innerText = t('Выберите город');
+            updateCityRegion(null, null);
+            updateCityInfo('', null);
             document.getElementById('city-modal').classList.add('hidden');
             document.body.classList.add('modal-open');
             if (settings.onboarded) {
@@ -4839,6 +5568,16 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                 selectCity(currentCity.name, currentCity.lat, currentCity.lon);
             }
         });
+
+        // Сообщаем Android, что первый экран отрисован:
+        // после этого нативный splash плавно исчезает.
+        if (window.Android && typeof window.Android.appReady === 'function') {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    try { window.Android.appReady(); } catch (e) {}
+                });
+            });
+        }
     });
 
     // === ПОПУЛЯРНЫЕ ГОРОДА РОССИИ И МИРА ===
@@ -4887,6 +5626,164 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             { name: 'Сидней', lat: -33.8688, lon: 151.2093, region: 'Австралия', code: 'AU' }
         ]
     };
+
+    // === СПРАВОЧНИК РЕГИОНОВ ДЛЯ ПОПУЛЯРНЫХ ГОРОДОВ ===
+    // area — полное название региона, areaShort — короткая подпись под городом,
+    // district — федеральный округ / район, timezone — база IANA для часов.
+    const CITY_META = {
+        'Москва': { area: 'Москва', areaShort: 'Столица', district: 'Центральный ФО', country: 'Россия', timezone: 'Europe/Moscow' },
+        'Санкт-Петербург': { area: 'Санкт-Петербург', areaShort: 'Нева', district: 'Северо-Западный ФО', country: 'Россия', timezone: 'Europe/Moscow' },
+        'Кемерово': { area: 'Кемеровская область — Кузбасс', areaShort: 'Кузбасс', district: 'Сибирский ФО', country: 'Россия', timezone: 'Asia/Novokuznetsk' },
+        'Новосибирск': { area: 'Новосибирская область', areaShort: 'Сибирь', district: 'Сибирский ФО', country: 'Россия', timezone: 'Asia/Novosibirsk' },
+        'Екатеринбург': { area: 'Свердловская область', areaShort: 'Урал', district: 'Уральский ФО', country: 'Россия', timezone: 'Asia/Yekaterinburg' },
+        'Казань': { area: 'Республика Татарстан', areaShort: 'Татарстан', district: 'Приволжский ФО', country: 'Россия', timezone: 'Europe/Moscow' },
+        'Нижний Новгород': { area: 'Нижегородская область', areaShort: 'Поволжье', district: 'Приволжский ФО', country: 'Россия', timezone: 'Europe/Moscow' },
+        'Челябинск': { area: 'Челябинская область', areaShort: 'Урал', district: 'Уральский ФО', country: 'Россия', timezone: 'Asia/Yekaterinburg' },
+        'Омск': { area: 'Омская область', areaShort: 'Сибирь', district: 'Сибирский ФО', country: 'Россия', timezone: 'Asia/Omsk' },
+        'Самара': { area: 'Самарская область', areaShort: 'Поволжье', district: 'Приволжский ФО', country: 'Россия', timezone: 'Europe/Samara' },
+        'Ростов-на-Дону': { area: 'Ростовская область', areaShort: 'Дон', district: 'Южный ФО', country: 'Россия', timezone: 'Europe/Moscow' },
+        'Уфа': { area: 'Республика Башкортостан', areaShort: 'Башкортостан', district: 'Приволжский ФО', country: 'Россия', timezone: 'Asia/Yekaterinburg' },
+        'Красноярск': { area: 'Красноярский край', areaShort: 'Сибирь', district: 'Сибирский ФО', country: 'Россия', timezone: 'Asia/Krasnoyarsk' },
+        'Воронеж': { area: 'Воронежская область', areaShort: 'Черноземье', district: 'Центральный ФО', country: 'Россия', timezone: 'Europe/Moscow' },
+        'Пермь': { area: 'Пермский край', areaShort: 'Урал', district: 'Приволжский ФО', country: 'Россия', timezone: 'Asia/Yekaterinburg' },
+        'Волгоград': { area: 'Волгоградская область', areaShort: 'Поволжье', district: 'Южный ФО', country: 'Россия', timezone: 'Europe/Volgograd' },
+        'Краснодар': { area: 'Краснодарский край', areaShort: 'Юг', district: 'Южный ФО', country: 'Россия', timezone: 'Europe/Moscow' },
+        'Сочи': { area: 'Краснодарский край', areaShort: 'Черное море', district: 'Южный ФО', country: 'Россия', timezone: 'Europe/Moscow' },
+        'Владивосток': { area: 'Приморский край', areaShort: 'Приморье', district: 'Дальневосточный ФО', country: 'Россия', timezone: 'Asia/Vladivostok' },
+        'Иркутск': { area: 'Иркутская область', areaShort: 'Байкал', district: 'Сибирский ФО', country: 'Россия', timezone: 'Asia/Irkutsk' },
+        'Дубай': { area: 'Дубай', areaShort: 'Дубай', district: '', country: 'ОАЭ', timezone: 'Asia/Dubai' },
+        'Стамбул': { area: 'Стамбул', areaShort: 'Стамбул', district: '', country: 'Турция', timezone: 'Europe/Istanbul' },
+        'Минск': { area: 'Минск', areaShort: 'Минск', district: '', country: 'Беларусь', timezone: 'Europe/Minsk' },
+        'Алматы': { area: 'Алматы', areaShort: 'Алматы', district: '', country: 'Казахстан', timezone: 'Asia/Almaty' },
+        'Астана': { area: 'Астана', areaShort: 'Астана', district: '', country: 'Казахстан', timezone: 'Asia/Almaty' },
+        'Ташкент': { area: 'Ташкент', areaShort: 'Ташкент', district: '', country: 'Узбекистан', timezone: 'Asia/Tashkent' },
+        'Бишкек': { area: 'Бишкек', areaShort: 'Бишкек', district: '', country: 'Кыргызстан', timezone: 'Asia/Bishkek' },
+        'Баку': { area: 'Баку', areaShort: 'Баку', district: '', country: 'Азербайджан', timezone: 'Asia/Baku' },
+        'Тбилиси': { area: 'Тбилиси', areaShort: 'Тбилиси', district: '', country: 'Грузия', timezone: 'Asia/Tbilisi' },
+        'Ереван': { area: 'Ереван', areaShort: 'Ереван', district: '', country: 'Армения', timezone: 'Asia/Yerevan' },
+        'Лондон': { area: 'Англия', areaShort: 'Англия', district: '', country: 'Великобритания', timezone: 'Europe/London' },
+        'Париж': { area: 'Иль-де-Франс', areaShort: 'Иль-де-Франс', district: '', country: 'Франция', timezone: 'Europe/Paris' },
+        'Берлин': { area: 'Берлин', areaShort: 'Берлин', district: '', country: 'Германия', timezone: 'Europe/Berlin' },
+        'Нью-Йорк': { area: 'Нью-Йорк', areaShort: 'Нью-Йорк', district: '', country: 'США', timezone: 'America/New_York' },
+        'Токио': { area: 'Токио', areaShort: 'Токио', district: '', country: 'Япония', timezone: 'Asia/Tokyo' },
+        'Сеул': { area: 'Сеул', areaShort: 'Сеул', district: '', country: 'Корея', timezone: 'Asia/Seoul' },
+        'Пекин': { area: 'Пекин', areaShort: 'Пекин', district: '', country: 'Китай', timezone: 'Asia/Shanghai' },
+        'Сингапур': { area: 'Сингапур', areaShort: 'Сингапур', district: '', country: 'Сингапур', timezone: 'Asia/Singapore' },
+        'Сидней': { area: 'Новый Южный Уэльс', areaShort: 'Новый Южный Уэльс', district: '', country: 'Австралия', timezone: 'Australia/Sydney' }
+    };
+
+    function normalizeCityMeta(meta) {
+        if (!meta || typeof meta !== 'object') return null;
+        const clean = {};
+        ['area', 'areaShort', 'district', 'districtShort', 'country', 'timezone'].forEach(key => {
+            if (typeof meta[key] === 'string' && meta[key].trim()) clean[key] = meta[key].trim();
+        });
+        return Object.keys(clean).length ? clean : null;
+    }
+
+    const DISTRICT_SHORT = {
+        'Центральный ФО': 'ЦФО',
+        'Северо-Западный ФО': 'СЗФО',
+        'Южный ФО': 'ЮФО',
+        'Северо-Кавказский ФО': 'СКФО',
+        'Приволжский ФО': 'ПФО',
+        'Уральский ФО': 'УФО',
+        'Сибирский ФО': 'СФО',
+        'Дальневосточный ФО': 'ДФО'
+    };
+
+    function cityMetaFor(name, meta) {
+        const explicit = normalizeCityMeta(meta);
+        if (explicit) {
+            if (explicit.district && !explicit.districtShort) {
+                explicit.districtShort = DISTRICT_SHORT[explicit.district] || '';
+            }
+            return explicit;
+        }
+        const known = CITY_META[name];
+        if (!known) return null;
+        const copy = {};
+        Object.keys(known).forEach(key => {
+            if (known[key]) copy[key] = known[key];
+        });
+        if (copy.district && !copy.districtShort) {
+            copy.districtShort = DISTRICT_SHORT[copy.district] || '';
+        }
+        return Object.keys(copy).length ? copy : null;
+    }
+
+    function currentCityMeta(name) {
+        const city = currentCity && (name === undefined || currentCity.name === name) ? currentCity : null;
+        if (!city) return null;
+        return cityMetaFor(city.name, city.meta);
+    }
+
+    function updateCityRegion(name, meta) {
+        const label = document.getElementById('city-region');
+        if (!label) return;
+
+        const info = meta === undefined ? currentCityMeta(name) : cityMetaFor(name || (currentCity && currentCity.name), meta);
+        if (!info) {
+            const hasCity = !!(name || (currentCity && currentCity.name));
+            label.innerText = t(hasCity ? 'Не указано' : 'Нажмите, чтобы выбрать');
+            return;
+        }
+
+        const parts = [];
+        if (info.areaShort || info.area) parts.push(info.areaShort || info.area);
+        if (info.districtShort || info.district) parts.push(info.districtShort || info.district);
+        else if (info.country) parts.push(info.country);
+
+        label.innerText = parts.map(part => t(part)).join(' • ');
+    }
+
+    function formatCityTime(timezone) {
+        if (!timezone) return '—';
+        try {
+            const now = new Date();
+            const time = new Intl.DateTimeFormat(currentLocale, {
+                timeZone: timezone,
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            }).format(now);
+            const offsetName = new Intl.DateTimeFormat(currentLocale, {
+                timeZone: timezone,
+                timeZoneName: 'shortOffset'
+            }).formatToParts(now).find(part => part.type === 'timeZoneName');
+            const offset = offsetName ? offsetName.value.replace('GMT', 'UTC') : '';
+            return time + (offset ? ' • ' + offset : '');
+        } catch (e) {
+            return timezone;
+        }
+    }
+
+    function updateCityInfo(name, meta) {
+        const info = meta === undefined ? currentCityMeta(name) : cityMetaFor(name || (currentCity && currentCity.name), meta);
+        const cityName = name || (currentCity && currentCity.name) || '';
+
+        const nameEl = document.getElementById('city-info-name');
+        const countryEl = document.getElementById('city-info-country');
+        const regionEl = document.getElementById('city-info-region');
+        const districtEl = document.getElementById('city-info-district');
+        const coordsEl = document.getElementById('city-info-coords');
+        const timezoneEl = document.getElementById('city-info-timezone');
+
+        if (nameEl) nameEl.innerText = cityName ? t(cityName) : t('Город не выбран');
+        if (countryEl) countryEl.innerText = info && info.country ? t(info.country) : '';
+        if (regionEl) regionEl.innerText = info && (info.area || info.areaShort) ? t(info.area || info.areaShort) : t('Не указано');
+        if (districtEl) districtEl.innerText = info && (info.district || info.districtShort) ? t(info.district || info.districtShort) : t('Не указано');
+
+        if (coordsEl) {
+            const coordsCity = currentCity && currentCity.name === cityName ? currentCity : null;
+            if (coordsCity && Number.isFinite(Number(coordsCity.lat)) && Number.isFinite(Number(coordsCity.lon))) {
+                coordsEl.innerText = Number(coordsCity.lat).toFixed(2) + ', ' + Number(coordsCity.lon).toFixed(2);
+            } else {
+                coordsEl.innerText = '—';
+            }
+        }
+        if (timezoneEl) timezoneEl.innerText = info && info.timezone ? formatCityTime(info.timezone) : '—';
+    }
 
     function renderCitySuggestions() {
         const build = (items, containerId) => {
@@ -4943,6 +5840,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
 
     // === ОКНО ВЫБОРА ГОРОДА ===
     function openCityModal() {
+        closeCityInfo();
         renderCitySuggestions();
         const overlay = document.getElementById('city-modal');
         overlay.classList.remove('hidden');
@@ -4969,13 +5867,21 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         }
     }
 
-    async function selectCity(name, lat, lon) {
+    async function selectCity(name, lat, lon, meta) {
         closeCityModal();
+        closeCityInfo();
         document.getElementById('city-title').innerText = t(name);
+
+        // Регион и округ: для популярных городов берём из справочника,
+        // для найденных через геокодер — из ответа Open-Meteo.
+        const cityMeta = cityMetaFor(name, meta);
+        updateCityRegion(name, cityMeta);
+
         setStatus(t('Связь с метеостанцией...'));
 
-        // Запоминаем последний город (с координатами), чтобы восстановить его при следующем запуске
-        currentCity = { name: name, lat: lat, lon: lon };
+        // Запоминаем последний город (с координатами и регионом), чтобы восстановить его при следующем запуске
+        currentCity = { name: name, lat: lat, lon: lon, meta: cityMeta };
+        updateCityInfo(name, cityMeta);
         syncCitySelection();
         saveSettingsDebounced();
 
@@ -5031,6 +5937,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
 
             const weather = {
                 city: name,
+                meta: cityMeta,
                 temp: temp,
                 feels: feels,
                 wind: windMs,
@@ -5071,7 +5978,12 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             const geo = await fetchWithTimeout(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(name)}&language=${currentLang}&count=1`);
             if (geo.results && geo.results.length > 0) {
                 const loc = geo.results[0];
-                selectCity(loc.name, loc.latitude, loc.longitude);
+                selectCity(loc.name, loc.latitude, loc.longitude, {
+                    area: loc.admin1,
+                    district: loc.admin2,
+                    country: loc.country,
+                    timezone: loc.timezone
+                });
             } else {
                 alert(t('Город не найден, проверьте название!'));
             }
@@ -5246,6 +6158,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         const code = w.code;
 
         document.getElementById('city-title').innerText = t(city);
+        const renderMeta = w.meta || (currentCity && currentCity.name === city ? currentCity.meta : null);
+        updateCityRegion(city, renderMeta);
+        updateCityInfo(city, renderMeta);
 
         const opts = { weekday: 'short', day: 'numeric', month: 'long' };
         document.getElementById('date-text').innerText = new Date().toLocaleDateString(currentLocale, opts);
@@ -5440,6 +6355,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
 
         const weather = {
             city: city,
+            meta: cityMetaFor(city),
             temp: p.t,
             feels: p.f,
             wind: p.w,
@@ -5467,7 +6383,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
     // === MATERIAL 3: RIPPLE / STATE LAYER ===
     (function initMaterialRipple() {
         const rippleTargets = [
-            '.icon-btn', '.city-pill', '.hour-pill', '.bento-tile', '.city-card',
+            '.icon-btn', '.city-main', '.city-arrow', '.hour-pill', '.bento-tile', '.city-card',
             '.settings-tab', '.mini-segmented button', '.chroma-tab', '.color-seed',
             '.wallpaper-option', '.panel-close', '.reset-btn', '.ob-lang',
             '.ob-theme button', '.ob-next', '.ob-back', '.dev-link', '.dev-avatar',

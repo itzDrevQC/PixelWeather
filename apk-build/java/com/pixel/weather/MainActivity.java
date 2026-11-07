@@ -1,5 +1,6 @@
 package com.pixel.weather;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.WallpaperColors;
 import android.app.WallpaperManager;
@@ -7,17 +8,27 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,21 +41,35 @@ public class MainActivity extends Activity {
     private static final Pattern RGB_PATTERN =
             Pattern.compile("rgba?\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)");
 
-    private static final int INITIAL_BG = 0xFFF2F5F9;
-
     private WebView webView;
+    private FrameLayout root;
+    private WeatherSplashView splashView;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
+    private volatile boolean appReady = false;
+    private int pendingThemeColor = Color.TRANSPARENT;
+
+    private final Runnable revealFallback = new Runnable() {
+        @Override
+        public void run() {
+            revealApp();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final int launchBg = getResources().getColor(R.color.launch_background);
         Window window = getWindow();
-        window.setStatusBarColor(INITIAL_BG);
-        window.setNavigationBarColor(INITIAL_BG);
-        applyBarIconMode(INITIAL_BG);
+        window.setStatusBarColor(launchBg);
+        window.setNavigationBarColor(launchBg);
+        applyBarIconMode(launchBg);
 
+        // WebView рисует тёмный фон ещё до появления HTML:
+        // так между системным splash и приложением нет белой вспышки.
         webView = new WebView(this);
-        webView.setBackgroundColor(INITIAL_BG);
+        webView.setBackgroundColor(launchBg);
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -60,9 +85,30 @@ public class MainActivity extends Activity {
         // false гарантирует воспроизведение data:audio даже в строгих WebView.
         settings.setMediaPlaybackRequiresUserGesture(false);
 
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                // Страховка: если JS не успел позвать appReady, показываем приложение
+                handler.postDelayed(revealFallback, 1200);
+            }
+        });
         webView.addJavascriptInterface(new ThemeBridge(), "Android");
-        setContentView(webView);
+
+        root = new FrameLayout(this);
+        root.setBackgroundColor(launchBg);
+        root.addView(webView, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT));
+
+        splashView = new WeatherSplashView(this);
+        root.addView(splashView, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT));
+
+        setContentView(root);
+
+        // Общая страховка на случай, если WebView вообще не загрузился
+        handler.postDelayed(revealFallback, 8000);
 
         // Загружаем HTML через https-базу, чтобы fetch() и localStorage
         // работали так же, как в обычном браузере (без file:// ограничений).
@@ -87,6 +133,29 @@ public class MainActivity extends Activity {
         } catch (IOException e) {
             return "<html><body style=\"font-family:sans-serif;padding:24px\">"
                     + "Не удалось загрузить приложение.</body></html>";
+        }
+    }
+
+    // Прячем нативный splash только после первого кадра HTML.
+    private void revealApp() {
+        if (appReady) return;
+        appReady = true;
+        handler.removeCallbacks(revealFallback);
+
+        if (pendingThemeColor != Color.TRANSPARENT) {
+            applySystemColor(pendingThemeColor);
+        }
+        if (splashView != null) {
+            splashView.dismiss();
+        }
+    }
+
+    private void applySystemColor(int color) {
+        getWindow().setStatusBarColor(color);
+        getWindow().setNavigationBarColor(color);
+        applyBarIconMode(color);
+        if (webView != null) {
+            webView.setBackgroundColor(color);
         }
     }
 
@@ -242,12 +311,21 @@ public class MainActivity extends Activity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    getWindow().setStatusBarColor(color);
-                    getWindow().setNavigationBarColor(color);
-                    applyBarIconMode(color);
-                    if (webView != null) {
-                        webView.setBackgroundColor(color);
+                    if (!appReady) {
+                        pendingThemeColor = color;
+                        return;
                     }
+                    applySystemColor(color);
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void appReady() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    revealApp();
                 }
             });
         }
@@ -276,11 +354,194 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        handler.removeCallbacks(revealFallback);
         if (webView != null) {
             webView.removeJavascriptInterface("Android");
             webView.destroy();
             webView = null;
         }
         super.onDestroy();
+    }
+
+    /**
+     * Нативный экран запуска в стиле Material 3: тёмный фон, знак погоды,
+     * название приложения и круговой индикатор загрузки по центру.
+     */
+    private static class WeatherSplashView extends View {
+
+        private final Paint backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint badgePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint shadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint cloudPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint sunPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint titlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint subtitlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint trackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint arcPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final RectF badgeRect = new RectF();
+        private final RectF spinnerRect = new RectF();
+
+        private final float density;
+        private final int badgeStartColor;
+        private final int badgeEndColor;
+        private float phase = 0f;
+        private boolean dismissed = false;
+        private ValueAnimator animator;
+
+        WeatherSplashView(Context context) {
+            super(context);
+            density = getResources().getDisplayMetrics().density;
+
+            int launchBackground = context.getResources().getColor(R.color.launch_background);
+            int launchAccent = context.getResources().getColor(R.color.launch_accent);
+            badgeStartColor = context.getResources().getColor(R.color.launch_badge_start);
+            badgeEndColor = context.getResources().getColor(R.color.launch_badge_end);
+
+            backgroundPaint.setColor(launchBackground);
+
+            shadowPaint.setColor(0x33000000);
+
+            cloudPaint.setColor(0xFFF7FAFF);
+
+            sunPaint.setColor(0xFFFFD955);
+
+            titlePaint.setColor(0xFFF5F8FF);
+            titlePaint.setTextAlign(Paint.Align.CENTER);
+            titlePaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+            titlePaint.setTextSize(25f * getResources().getDisplayMetrics().scaledDensity);
+            titlePaint.setLetterSpacing(0.01f);
+
+            subtitlePaint.setColor(launchAccent);
+            subtitlePaint.setTextAlign(Paint.Align.CENTER);
+            subtitlePaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+            subtitlePaint.setTextSize(12f * getResources().getDisplayMetrics().scaledDensity);
+            subtitlePaint.setLetterSpacing(0.14f);
+
+            trackPaint.setStyle(Paint.Style.STROKE);
+            trackPaint.setStrokeWidth(4f * density);
+            trackPaint.setColor(0x33FFFFFF);
+
+            arcPaint.setStyle(Paint.Style.STROKE);
+            arcPaint.setStrokeWidth(4f * density);
+            arcPaint.setStrokeCap(Paint.Cap.ROUND);
+            arcPaint.setColor(launchAccent);
+
+            setClickable(true);
+            setFocusable(true);
+
+            animator = ValueAnimator.ofFloat(0f, 1f);
+            animator.setDuration(1650);
+            animator.setRepeatCount(ValueAnimator.INFINITE);
+            animator.setInterpolator(new LinearInterpolator());
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    phase = (Float) animation.getAnimatedValue();
+                    invalidate();
+                }
+            });
+            animator.start();
+        }
+
+        void dismiss() {
+            if (dismissed) return;
+            dismissed = true;
+            if (animator != null) {
+                animator.cancel();
+            }
+            animate()
+                    .alpha(0f)
+                    .setDuration(320)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            setVisibility(View.GONE);
+                        }
+                    })
+                    .start();
+        }
+
+        @Override
+        protected void onDetachedFromWindow() {
+            if (animator != null) {
+                animator.cancel();
+                animator = null;
+            }
+            super.onDetachedFromWindow();
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+
+            float width = getWidth();
+            float height = getHeight();
+            float cx = width / 2f;
+            float cy = height / 2f;
+
+            canvas.drawRect(0, 0, width, height, backgroundPaint);
+
+            float badgeSize = 96f * density;
+            float badgeCy = cy - 76f * density;
+            badgeRect.set(
+                    cx - badgeSize / 2f,
+                    badgeCy - badgeSize / 2f,
+                    cx + badgeSize / 2f,
+                    badgeCy + badgeSize / 2f
+            );
+
+            float radius = 27f * density;
+
+            // Мягкая тень под знаком
+            RectF shadowRect = new RectF(badgeRect);
+            shadowRect.offset(0, 9f * density);
+            canvas.drawRoundRect(shadowRect, radius, radius, shadowPaint);
+
+            badgePaint.setShader(new LinearGradient(
+                    badgeRect.left, badgeRect.top, badgeRect.right, badgeRect.bottom,
+                    badgeStartColor, badgeEndColor, Shader.TileMode.CLAMP
+            ));
+            canvas.drawRoundRect(badgeRect, radius, radius, badgePaint);
+
+            // Солнце
+            canvas.drawCircle(
+                    cx - 13f * density,
+                    badgeCy - 13f * density,
+                    12f * density,
+                    sunPaint
+            );
+
+            // Облако: три круга и скруглённое основание
+            canvas.drawCircle(cx - 15f * density, badgeCy + 8f * density, 12f * density, cloudPaint);
+            canvas.drawCircle(cx + 1f * density, badgeCy + 2f * density, 16f * density, cloudPaint);
+            canvas.drawCircle(cx + 17f * density, badgeCy + 8f * density, 12f * density, cloudPaint);
+            RectF cloudBase = new RectF(
+                    cx - 27f * density,
+                    badgeCy + 8f * density,
+                    cx + 29f * density,
+                    badgeCy + 24f * density
+            );
+            canvas.drawRoundRect(cloudBase, 8f * density, 8f * density, cloudPaint);
+
+            // Название и подпись
+            canvas.drawText("Pixel Weather", cx, cy + 10f * density, titlePaint);
+            canvas.drawText("MATERIAL YOU", cx, cy + 35f * density, subtitlePaint);
+
+            // Круговой индикатор загрузки M3
+            float spinnerCy = cy + 88f * density;
+            float spinnerRadius = 22f * density;
+            spinnerRect.set(
+                    cx - spinnerRadius,
+                    spinnerCy - spinnerRadius,
+                    cx + spinnerRadius,
+                    spinnerCy + spinnerRadius
+            );
+            canvas.drawCircle(cx, spinnerCy, spinnerRadius, trackPaint);
+
+            float rotation = phase * 360f;
+            float sweep = 24f + 250f * (0.5f - 0.5f * (float) Math.cos(phase * Math.PI * 2));
+            canvas.drawArc(spinnerRect, rotation - 90f, sweep, false, arcPaint);
+        }
     }
 }
