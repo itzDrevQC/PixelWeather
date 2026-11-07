@@ -804,6 +804,11 @@
             50% { box-shadow: 0 0 0 6px hsl(var(--h), var(--s), 55%, 0); }
         }
 
+        @keyframes sunWaveFlow {
+            from { -webkit-mask-position: 0 50%; mask-position: 0 50%; }
+            to { -webkit-mask-position: 24px 50%; mask-position: 24px 50%; }
+        }
+
         /* === КАПСУЛЫ ПРОГНОЗА ПО ЧАСАМ (MATERIAL YOU) === */
         .hourly-row {
             display: grid;
@@ -1010,6 +1015,26 @@
             border: 3px solid var(--bg);
             transition: left 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
             animation: sunPulse 3s ease-in-out infinite;
+        }
+        .sun-line, .sun-progress {
+            --sun-wave: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='10'%20viewBox='0%200%2024%2010'%3E%3Cpath%20d='M0,5C2,1,4,1,6,5S10,9,12,5S16,1,18,5S22,9,24,5'%20fill='none'%20stroke='white'%20stroke-width='2.4'%20stroke-linecap='round'/%3E%3C/svg%3E");
+            border-radius: 0;
+            -webkit-mask-image: var(--sun-wave);
+            -webkit-mask-repeat: repeat-x;
+            -webkit-mask-size: 24px 10px;
+            -webkit-mask-position: 0 50%;
+            mask-image: var(--sun-wave);
+            mask-repeat: repeat-x;
+            mask-size: 24px 10px;
+            mask-position: 0 50%;
+            animation: sunWaveFlow 2.4s linear infinite;
+        }
+        body.no-anim .sun-line,
+        body.no-anim .sun-progress {
+            animation: none;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .sun-line, .sun-progress { animation: none; }
         }
         .sun-labels {
             display: flex;
@@ -2139,7 +2164,7 @@
             letter-spacing: 0.3px;
             color: var(--md-on-surface-variant);
         }
-        .sun-track { height: 4px; background: var(--md-surface-container-highest); }
+        .sun-track { height: 10px; background: transparent; }
         .sun-line { background: var(--md-outline-variant); }
         .sun-progress { background: var(--md-primary); }
         .sun-dot {
@@ -4637,7 +4662,8 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                         'Своя типографика: загрузите TTF или OTF — шрифт применится ко всему интерфейсу',
                         'Три набора иконок погоды: Noto, контурный Material и новый 8-битный Pixel',
                         'Единая «Кастомизация»: тема, палитра, фигурка у иконки, шрифты и наборы иконок',
-                        'Шрифт и набор иконок сохраняются на устройстве и работают офлайн'
+                        'Шрифт и набор иконок сохраняются на устройстве и работают офлайн',
+                        'Волнистая дорожка солнца: линия в карточке «Солнце» бежит вперёд к текущему положению солнца'
                     ]
                 },
                 {
@@ -4680,7 +4706,8 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                         'Your own typography: upload a TTF or OTF and the font applies to the whole interface',
                         'Three weather icon sets: Noto, outline Material, and the new 8-bit Pixel',
                         'Unified Customization: theme, palette, icon ornament, fonts, and icon sets',
-                        'The selected font and icon set are stored on the device and work offline'
+                        'The selected font and icon set are stored on the device and work offline',
+                        'Wavy sun track: the line inside the Sun card flows forward toward the current sun position'
                     ]
                 },
                 {
