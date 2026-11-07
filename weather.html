@@ -2631,8 +2631,8 @@
             background: var(--md-secondary-container);
             color: var(--md-on-secondary-container);
         }
-        .palette-grid { gap: 16px 10px; margin-bottom: 22px; }
-        .color-seed { width: 48px; height: 48px; position: relative; }
+        .palette-grid { gap: 16px 10px; margin-bottom: 22px; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+        .color-seed { width: 100%; max-width: 48px; height: auto; aspect-ratio: 1 / 1; position: relative; }
         .color-seed.selected {
             border: 2px solid var(--md-on-surface);
             border-radius: 50%;
@@ -2972,6 +2972,7 @@
         .monet-panel,
         .settings-panel { box-shadow: none; }
         body[data-view="settings"] .settings-group,
+        body[data-view="palette"] .settings-group,
         body[data-view="palette"] .wallpaper-option,
         body[data-view="palette"] .hue-slider-box { box-shadow: none; }
 
@@ -3343,7 +3344,7 @@
                     <path d="M12 7v5l3 2"/>
                 </svg>
             </button>
-            <button class="icon-btn" id="monet-btn" onclick="toggleMonetPanel()" title="Цвета Monet" aria-label="Цвета Monet">
+            <button class="icon-btn" id="monet-btn" onclick="toggleMonetPanel()" title="Кастомизация" aria-label="Кастомизация">
                 <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                     <circle cx="13.5" cy="6.5" r="0.5" fill="currentColor"/>
                     <circle cx="17.5" cy="10.5" r="0.5" fill="currentColor"/>
@@ -3366,14 +3367,33 @@
         <div class="panel-header">
             <div>
                 <div class="panel-eyebrow">Material You</div>
-                <div class="panel-title">Палитра</div>
+                <div class="panel-title">Кастомизация</div>
             </div>
             <button class="panel-close" onclick="closeView()" title="Назад" aria-label="Назад">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
             </button>
         </div>
 
-        <button class="wallpaper-option" id="wallpaper-option" onclick="useWallpaperColors()">
+        <div class="settings-group">
+            <div class="settings-group-title">Оформление</div>
+
+            <div class="setting-row">
+                <div class="setting-text">
+                    <span>Тема</span>
+                    <small>Светлая, тёмная или как в системе</small>
+                </div>
+                <div class="mini-segmented" id="theme-seg">
+                    <button data-theme="light" onclick="setThemeMode('light', this)" aria-label="Светлая" title="Светлая"><svg class="seg-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+                    <button data-theme="dark" onclick="setThemeMode('dark', this)" aria-label="Тёмная" title="Тёмная"><svg class="seg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
+                    <button data-theme="system" onclick="setThemeMode('system', this)">Авто</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <div class="settings-group-title">Палитра</div>
+
+            <button class="wallpaper-option" id="wallpaper-option" onclick="useWallpaperColors()">
             <span class="wallpaper-preview"></span>
             <span class="wallpaper-text">
                 <span class="wallpaper-name">Использовать обои</span>
@@ -3411,6 +3431,173 @@
             </div>
             <input type="range" min="0" max="360" value="215" class="hue-slider" id="hue-range" oninput="setCustomHue(this.value)">
         </div>
+        </div>
+
+        <div class="settings-group">
+            <div class="settings-group-title">Фигура у иконки</div>
+
+            <div class="setting-row">
+                <div class="setting-text">
+                    <span>Форма</span>
+                    <small>Тот самый вращающийся элемент за смайликом</small>
+                </div>
+                <div class="mini-segmented" id="hero-shape-seg">
+                    <button data-hero-shape="star" onclick="setHeroShape('star', this)">Лучи</button>
+                    <button data-hero-shape="octagon" onclick="setHeroShape('octagon', this)">Грани</button>
+                    <button data-hero-shape="round" onclick="setHeroShape('round', this)">Круг</button>
+                </div>
+            </div>
+
+            <div class="range-block">
+                <div class="setting-row">
+                    <div class="setting-text">
+                        <span>Размер</span>
+                        <small>Относительно смайлика погоды</small>
+                    </div>
+                    <span class="setting-value" id="hero-size-val">100%</span>
+                </div>
+                <input class="md3-range" id="hero-size-range" type="range" min="80" max="130" step="5" value="100" oninput="setHeroSize(this.value)">
+            </div>
+
+            <div class="range-block">
+                <div class="setting-row">
+                    <div class="setting-text">
+                        <span>Скорость вращения</span>
+                        <small>0 — остановить вращение</small>
+                    </div>
+                    <span class="setting-value" id="hero-spin-val">20 с</span>
+                </div>
+                <input class="md3-range" id="hero-spin-range" type="range" min="0" max="60" step="2" value="20" oninput="setHeroSpin(this.value)">
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-text">
+                    <span>Направление</span>
+                    <small>По часовой стрелке или против</small>
+                </div>
+                <div class="mini-segmented" id="hero-direction-seg">
+                    <button data-hero-direction="normal" onclick="setHeroDirection('normal', this)">По часовой</button>
+                    <button data-hero-direction="reverse" onclick="setHeroDirection('reverse', this)">Против</button>
+                </div>
+            </div>
+
+            <div class="range-block">
+                <div class="setting-row">
+                    <div class="setting-text">
+                        <span>Высота лучей</span>
+                        <small>Насколько лучи выступают за центр</small>
+                    </div>
+                    <span class="setting-value" id="hero-ray-height-val">100%</span>
+                </div>
+                <input class="md3-range" id="hero-ray-height-range" type="range" min="40" max="160" step="5" value="100" oninput="setHeroRayHeight(this.value)">
+            </div>
+
+            <div class="range-block">
+                <div class="setting-row">
+                    <div class="setting-text">
+                        <span>Ширина лучей</span>
+                        <small>Толщина каждого луча</small>
+                    </div>
+                    <span class="setting-value" id="hero-ray-width-val">100%</span>
+                </div>
+                <input class="md3-range" id="hero-ray-width-range" type="range" min="40" max="160" step="5" value="100" oninput="setHeroRayWidth(this.value)">
+            </div>
+
+            <div class="range-block">
+                <div class="setting-row">
+                    <div class="setting-text">
+                        <span>Глубина</span>
+                        <small>Мягкая тень под фигурой</small>
+                    </div>
+                    <span class="setting-value" id="hero-ray-depth-val">40%</span>
+                </div>
+                <input class="md3-range" id="hero-ray-depth-range" type="range" min="0" max="100" step="5" value="40" oninput="setHeroRayDepth(this.value)">
+            </div>
+
+            <div class="range-block">
+                <div class="setting-row">
+                    <div class="setting-text">
+                        <span>Скругление лучей</span>
+                        <small>Форма кончиков: от острых до круглых</small>
+                    </div>
+                    <span class="setting-value" id="hero-ray-round-val">100%</span>
+                </div>
+                <input class="md3-range" id="hero-ray-round-range" type="range" min="0" max="100" step="5" value="100" oninput="setHeroRayRound(this.value)">
+            </div>
+        </div>
+
+        <div class="settings-hint">Фигурка меняет вращающийся элемент вокруг смайлика погоды; параметры лучей действуют для формы «Лучи».</div>
+
+        <div class="settings-group">
+            <div class="settings-group-title">Шрифт</div>
+
+            <div class="setting-row">
+                <div class="setting-text">
+                    <span>Шрифт приложения</span>
+                    <small>Comfortaa, системный или свой TTF/OTF</small>
+                </div>
+                <span class="setting-value" id="font-current">Comfortaa</span>
+            </div>
+
+            <div class="font-preview">
+                <div class="font-preview-sample" id="font-preview-sample">Съешь ещё этих мягких булок</div>
+                <div class="font-preview-meta">
+                    <span id="font-preview-name">Comfortaa</span>
+                    <span id="font-preview-range">300–700</span>
+                </div>
+            </div>
+
+            <div class="font-choice">
+                <div class="mini-segmented" id="font-seg">
+                    <button data-font="comfortaa" onclick="setFontChoice('comfortaa', this)">Comfortaa</button>
+                    <button data-font="system" onclick="setFontChoice('system', this)">Системный</button>
+                    <button data-font="custom" onclick="setFontChoice('custom', this)">Свой</button>
+                </div>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-text">
+                    <span>Свой шрифт</span>
+                    <small>TTF или OTF, до 10 МБ</small>
+                </div>
+                <div class="font-actions">
+                    <button class="mini-action" id="font-upload-btn" onclick="pickCustomFont()">Загрузить</button>
+                    <button class="mini-action danger" id="font-remove-btn" onclick="clearCustomFont()" hidden>Удалить</button>
+                </div>
+            </div>
+            <input type="file" id="font-file-input" accept=".ttf,.otf,font/ttf,font/otf,application/x-font-ttf,application/x-font-opentype" style="display:none">
+            <div class="settings-hint" style="padding:0 0 12px">Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.</div>
+        </div>
+
+        <div class="settings-group">
+            <div class="settings-group-title">Иконки погоды</div>
+
+            <div class="icon-pack-grid" id="icon-pack-grid">
+                <button class="icon-pack-card" data-icon-pack="noto" onclick="setIconPack('noto', this)">
+                    <span class="icon-pack-preview" data-icon-preview="noto"></span>
+                    <span>Noto</span>
+                </button>
+                <button class="icon-pack-card" data-icon-pack="material" onclick="setIconPack('material', this)">
+                    <span class="icon-pack-preview" data-icon-preview="material"></span>
+                    <span>Material</span>
+                </button>
+                <button class="icon-pack-card" data-icon-pack="pixel" onclick="setIconPack('pixel', this)">
+                    <span class="icon-pack-preview" data-icon-preview="pixel"></span>
+                    <span>Pixel</span>
+                </button>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-text">
+                    <span>Набор</span>
+                    <small>Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит</small>
+                </div>
+                <span class="setting-value" id="icon-pack-current">Noto</span>
+            </div>
+
+            <div class="settings-hint" style="padding:0 0 12px">Набор применяется к большой иконке и почасовому прогнозу.</div>
+        </div>
+
     </div>
 
     <!-- ЧТО НОВОГО -->
@@ -3442,7 +3629,6 @@
     <div class="settings-tabs" role="tablist">
         <button class="settings-tab active" data-settings-tab="main" onclick="setSettingsTab('main', this)" role="tab">Основное</button>
         <button class="settings-tab" data-settings-tab="geometry" onclick="setSettingsTab('geometry', this)" role="tab">Геометрия</button>
-        <button class="settings-tab" data-settings-tab="custom" onclick="setSettingsTab('custom', this)" role="tab">Кастомизация</button>
         <button class="settings-tab" data-settings-tab="dev" onclick="setSettingsTab('dev', this)" role="tab">Разработчики</button>
     </div>
 
@@ -3450,18 +3636,6 @@
     <div class="settings-page active" data-settings-page="main">
         <div class="settings-group">
             <div class="settings-group-title">Оформление</div>
-
-            <div class="setting-row">
-                <div class="setting-text">
-                    <span>Тема</span>
-                    <small>Светлая, тёмная или как в системе</small>
-                </div>
-                <div class="mini-segmented" id="theme-seg">
-                    <button data-theme="light" onclick="setThemeMode('light', this)" aria-label="Светлая" title="Светлая"><svg class="seg-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
-                    <button data-theme="dark" onclick="setThemeMode('dark', this)" aria-label="Тёмная" title="Тёмная"><svg class="seg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg></button>
-                    <button data-theme="system" onclick="setThemeMode('system', this)">Авто</button>
-                </div>
-            </div>
 
             <div class="setting-row">
                 <div class="setting-text">
@@ -3610,173 +3784,7 @@
             </div>
         </div>
 
-        <div class="settings-group">
-            <div class="settings-group-title">Фигура у иконки</div>
-
-            <div class="setting-row">
-                <div class="setting-text">
-                    <span>Форма</span>
-                    <small>Тот самый вращающийся элемент за смайликом</small>
-                </div>
-                <div class="mini-segmented" id="hero-shape-seg">
-                    <button data-hero-shape="star" onclick="setHeroShape('star', this)">Лучи</button>
-                    <button data-hero-shape="octagon" onclick="setHeroShape('octagon', this)">Грани</button>
-                    <button data-hero-shape="round" onclick="setHeroShape('round', this)">Круг</button>
-                </div>
-            </div>
-
-            <div class="range-block">
-                <div class="setting-row">
-                    <div class="setting-text">
-                        <span>Размер</span>
-                        <small>Относительно смайлика погоды</small>
-                    </div>
-                    <span class="setting-value" id="hero-size-val">100%</span>
-                </div>
-                <input class="md3-range" id="hero-size-range" type="range" min="80" max="130" step="5" value="100" oninput="setHeroSize(this.value)">
-            </div>
-
-            <div class="range-block">
-                <div class="setting-row">
-                    <div class="setting-text">
-                        <span>Скорость вращения</span>
-                        <small>0 — остановить вращение</small>
-                    </div>
-                    <span class="setting-value" id="hero-spin-val">20 с</span>
-                </div>
-                <input class="md3-range" id="hero-spin-range" type="range" min="0" max="60" step="2" value="20" oninput="setHeroSpin(this.value)">
-            </div>
-
-            <div class="setting-row">
-                <div class="setting-text">
-                    <span>Направление</span>
-                    <small>По часовой стрелке или против</small>
-                </div>
-                <div class="mini-segmented" id="hero-direction-seg">
-                    <button data-hero-direction="normal" onclick="setHeroDirection('normal', this)">По часовой</button>
-                    <button data-hero-direction="reverse" onclick="setHeroDirection('reverse', this)">Против</button>
-                </div>
-            </div>
-
-            <div class="range-block">
-                <div class="setting-row">
-                    <div class="setting-text">
-                        <span>Высота лучей</span>
-                        <small>Насколько лучи выступают за центр</small>
-                    </div>
-                    <span class="setting-value" id="hero-ray-height-val">100%</span>
-                </div>
-                <input class="md3-range" id="hero-ray-height-range" type="range" min="40" max="160" step="5" value="100" oninput="setHeroRayHeight(this.value)">
-            </div>
-
-            <div class="range-block">
-                <div class="setting-row">
-                    <div class="setting-text">
-                        <span>Ширина лучей</span>
-                        <small>Толщина каждого луча</small>
-                    </div>
-                    <span class="setting-value" id="hero-ray-width-val">100%</span>
-                </div>
-                <input class="md3-range" id="hero-ray-width-range" type="range" min="40" max="160" step="5" value="100" oninput="setHeroRayWidth(this.value)">
-            </div>
-
-            <div class="range-block">
-                <div class="setting-row">
-                    <div class="setting-text">
-                        <span>Глубина</span>
-                        <small>Мягкая тень под фигурой</small>
-                    </div>
-                    <span class="setting-value" id="hero-ray-depth-val">40%</span>
-                </div>
-                <input class="md3-range" id="hero-ray-depth-range" type="range" min="0" max="100" step="5" value="40" oninput="setHeroRayDepth(this.value)">
-            </div>
-
-            <div class="range-block">
-                <div class="setting-row">
-                    <div class="setting-text">
-                        <span>Скругление лучей</span>
-                        <small>Форма кончиков: от острых до круглых</small>
-                    </div>
-                    <span class="setting-value" id="hero-ray-round-val">100%</span>
-                </div>
-                <input class="md3-range" id="hero-ray-round-range" type="range" min="0" max="100" step="5" value="100" oninput="setHeroRayRound(this.value)">
-            </div>
-        </div>
-
-        <div class="settings-hint">Форма применяется ко всем карточкам приложения. «Глубина» управляет тенями, «Скругление» — радиусом, а число углов превращает прямоугольники в фигурные панели. Настройки 8 углов появляются, когда выбран режим «8». Настройки фигуры меняют вращающийся элемент вокруг смайлика погоды; параметры лучей действуют для формы «Лучи».</div>
-    </div>
-
-    <!-- КАСТОМИЗАЦИЯ -->
-    <div class="settings-page" data-settings-page="custom">
-        <div class="settings-group">
-            <div class="settings-group-title">Шрифт</div>
-
-            <div class="setting-row">
-                <div class="setting-text">
-                    <span>Шрифт приложения</span>
-                    <small>Comfortaa, системный или свой TTF/OTF</small>
-                </div>
-                <span class="setting-value" id="font-current">Comfortaa</span>
-            </div>
-
-            <div class="font-preview">
-                <div class="font-preview-sample" id="font-preview-sample">Съешь ещё этих мягких булок</div>
-                <div class="font-preview-meta">
-                    <span id="font-preview-name">Comfortaa</span>
-                    <span id="font-preview-range">300–700</span>
-                </div>
-            </div>
-
-            <div class="font-choice">
-                <div class="mini-segmented" id="font-seg">
-                    <button data-font="comfortaa" onclick="setFontChoice('comfortaa', this)">Comfortaa</button>
-                    <button data-font="system" onclick="setFontChoice('system', this)">Системный</button>
-                    <button data-font="custom" onclick="setFontChoice('custom', this)">Свой</button>
-                </div>
-            </div>
-
-            <div class="setting-row">
-                <div class="setting-text">
-                    <span>Свой шрифт</span>
-                    <small>TTF или OTF, до 10 МБ</small>
-                </div>
-                <div class="font-actions">
-                    <button class="mini-action" id="font-upload-btn" onclick="pickCustomFont()">Загрузить</button>
-                    <button class="mini-action danger" id="font-remove-btn" onclick="clearCustomFont()" hidden>Удалить</button>
-                </div>
-            </div>
-            <input type="file" id="font-file-input" accept=".ttf,.otf,font/ttf,font/otf,application/x-font-ttf,application/x-font-opentype" style="display:none">
-            <div class="settings-hint" style="padding:0 0 12px">Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.</div>
-        </div>
-
-        <div class="settings-group">
-            <div class="settings-group-title">Иконки погоды</div>
-
-            <div class="icon-pack-grid" id="icon-pack-grid">
-                <button class="icon-pack-card" data-icon-pack="noto" onclick="setIconPack('noto', this)">
-                    <span class="icon-pack-preview" data-icon-preview="noto"></span>
-                    <span>Noto</span>
-                </button>
-                <button class="icon-pack-card" data-icon-pack="material" onclick="setIconPack('material', this)">
-                    <span class="icon-pack-preview" data-icon-preview="material"></span>
-                    <span>Material</span>
-                </button>
-                <button class="icon-pack-card" data-icon-pack="pixel" onclick="setIconPack('pixel', this)">
-                    <span class="icon-pack-preview" data-icon-preview="pixel"></span>
-                    <span>Pixel</span>
-                </button>
-            </div>
-
-            <div class="setting-row">
-                <div class="setting-text">
-                    <span>Набор</span>
-                    <small>Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит</small>
-                </div>
-                <span class="setting-value" id="icon-pack-current">Noto</span>
-            </div>
-
-            <div class="settings-hint" style="padding:0 0 12px">Набор применяется к большой иконке и почасовому прогнозу.</div>
-        </div>
+        <div class="settings-hint">Форма применяется ко всем карточкам приложения. «Глубина» управляет тенями, «Скругление» — радиусом, а число углов превращает прямоугольники в фигурные панели. Настройки 8 углов появляются, когда выбран режим «8».</div>
     </div>
 
     <!-- РАЗРАБОТЧИКИ -->
@@ -4343,7 +4351,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'Файл слишком большой (макс. 10 МБ)': 'File is too large (max 10 MB)',
             'Поддерживаются только TTF и OTF': 'Only TTF and OTF are supported',
             'Не удалось прочитать файл шрифта': 'Could not read the font file',
-            'Шрифт не найден на устройстве': 'Font not found on device'
+            'Шрифт не найден на устройстве': 'Font not found on device',
+            'Форма применяется ко всем карточкам приложения. «Глубина» управляет тенями, «Скругление» — радиусом, а число углов превращает прямоугольники в фигурные панели. Настройки 8 углов появляются, когда выбран режим «8».': 'The shape applies to all app cards. “Depth” controls shadows, “Rounding” controls the radius, and the corner count turns rectangles into shaped panels. The 8-corner settings appear when “8” is selected.',
+            'Фигурка меняет вращающийся элемент вокруг смайлика погоды; параметры лучей действуют для формы «Лучи».': 'The shape changes the rotating element around the weather emoji; the ray settings apply to the “Rays” shape.'
         },
         de: {
             'Кастомизация': 'Anpassung',
@@ -4369,7 +4379,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'Файл слишком большой (макс. 10 МБ)': 'Datei ist zu groß (max. 10 MB)',
             'Поддерживаются только TTF и OTF': 'Nur TTF und OTF werden unterstützt',
             'Не удалось прочитать файл шрифта': 'Schriftdatei konnte nicht gelesen werden',
-            'Шрифт не найден на устройстве': 'Schriftart auf dem Gerät nicht gefunden'
+            'Шрифт не найден на устройстве': 'Schriftart auf dem Gerät nicht gefunden',
+            'Форма применяется ко всем карточкам приложения. «Глубина» управляет тенями, «Скругление» — радиусом, а число углов превращает прямоугольники в фигурные панели. Настройки 8 углов появляются, когда выбран режим «8».': 'Die Form gilt für alle Karten der App. „Tiefe“ steuert die Schatten, „Rundung“ den Radius, und die Anzahl der Ecken verwandelt Rechtecke in geformte Panels. Die Einstellungen für 8 Ecken erscheinen, wenn „8“ ausgewählt ist.',
+            'Фигурка меняет вращающийся элемент вокруг смайлика погоды; параметры лучей действуют для формы «Лучи».': 'Die Form ändert das rotierende Element um das Wetter-Emoji; die Strahleneinstellungen gelten für die Form „Strahlen“.'
         },
         es: {
             'Кастомизация': 'Personalización',
@@ -4395,7 +4407,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'Файл слишком большой (макс. 10 МБ)': 'El archivo es demasiado grande (máx. 10 MB)',
             'Поддерживаются только TTF и OTF': 'Solo se admiten TTF y OTF',
             'Не удалось прочитать файл шрифта': 'No se pudo leer el archivo de fuente',
-            'Шрифт не найден на устройстве': 'Fuente no encontrada en el dispositivo'
+            'Шрифт не найден на устройстве': 'Fuente no encontrada en el dispositivo',
+            'Форма применяется ко всем карточкам приложения. «Глубина» управляет тенями, «Скругление» — радиусом, а число углов превращает прямоугольники в фигурные панели. Настройки 8 углов появляются, когда выбран режим «8».': 'La forma se aplica a todas las tarjetas de la app. «Profundidad» controla las sombras, «Redondeo» el radio, y el número de esquinas convierte los rectángulos en paneles con forma. Los ajustes de 8 esquinas aparecen cuando se selecciona «8».',
+            'Фигурка меняет вращающийся элемент вокруг смайлика погоды; параметры лучей действуют для формы «Лучи».': 'La figura cambia el elemento giratorio alrededor del emoji del clima; los ajustes de rayos se aplican a la forma «Rayos».'
         },
         fr: {
             'Кастомизация': 'Personnalisation',
@@ -4421,7 +4435,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'Файл слишком большой (макс. 10 МБ)': 'Fichier trop volumineux (10 MB max)',
             'Поддерживаются только TTF и OTF': 'Seuls les formats TTF et OTF sont pris en charge',
             'Не удалось прочитать файл шрифта': 'Impossible de lire le fichier de police',
-            'Шрифт не найден на устройстве': 'Police introuvable sur l’appareil'
+            'Шрифт не найден на устройстве': 'Police introuvable sur l’appareil',
+            'Форма применяется ко всем карточкам приложения. «Глубина» управляет тенями, «Скругление» — радиусом, а число углов превращает прямоугольники в фигурные панели. Настройки 8 углов появляются, когда выбран режим «8».': 'La forme s’applique à toutes les cartes de l’application. « Profondeur » contrôle les ombres, « Arrondi » le rayon, et le nombre de coins transforme les rectangles en panneaux sculptés. Les réglages à 8 coins apparaissent lorsque « 8 » est sélectionné.',
+            'Фигурка меняет вращающийся элемент вокруг смайлика погоды; параметры лучей действуют для формы «Лучи».': 'La figure modifie l’élément rotatif autour de l’emoji météo ; les réglages des rayons s’appliquent à la forme « Rayons ».'
         },
         it: {
             'Кастомизация': 'Personalizzazione',
@@ -4447,7 +4463,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'Файл слишком большой (макс. 10 МБ)': 'File troppo grande (max 10 MB)',
             'Поддерживаются только TTF и OTF': 'Sono supportati solo TTF e OTF',
             'Не удалось прочитать файл шрифта': 'Impossibile leggere il file del carattere',
-            'Шрифт не найден на устройстве': 'Carattere non trovato sul dispositivo'
+            'Шрифт не найден на устройстве': 'Carattere non trovato sul dispositivo',
+            'Форма применяется ко всем карточкам приложения. «Глубина» управляет тенями, «Скругление» — радиусом, а число углов превращает прямоугольники в фигурные панели. Настройки 8 углов появляются, когда выбран режим «8».': 'La forma si applica a tutte le schede dell’app. «Profondità» controlla le ombre, «Arrotondamento» il raggio, e il numero di angoli trasforma i rettangoli in pannelli sagomati. Le impostazioni a 8 angoli compaiono quando è selezionato «8».',
+            'Фигурка меняет вращающийся элемент вокруг смайлика погоды; параметры лучей действуют для формы «Лучи».': 'La figura cambia l’elemento rotante attorno all’emoji del meteo; le impostazioni dei raggi si applicano alla forma «Raggi».'
         },
         pt: {
             'Кастомизация': 'Personalização',
@@ -4473,7 +4491,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'Файл слишком большой (макс. 10 МБ)': 'O arquivo é muito grande (máx. 10 MB)',
             'Поддерживаются только TTF и OTF': 'Apenas TTF e OTF são suportados',
             'Не удалось прочитать файл шрифта': 'Não foi possível ler o arquivo da fonte',
-            'Шрифт не найден на устройстве': 'Fonte não encontrada no dispositivo'
+            'Шрифт не найден на устройстве': 'Fonte não encontrada no dispositivo',
+            'Форма применяется ко всем карточкам приложения. «Глубина» управляет тенями, «Скругление» — радиусом, а число углов превращает прямоугольники в фигурные панели. Настройки 8 углов появляются, когда выбран режим «8».': 'A forma se aplica a todos os cartões do app. «Profundidade» controla as sombras, «Arredondamento» o raio, e o número de cantos transforma retângulos em painéis moldados. As configurações de 8 cantos aparecem quando «8» está selecionado.',
+            'Фигурка меняет вращающийся элемент вокруг смайлика погоды; параметры лучей действуют для формы «Лучи».': 'A figura altera o elemento giratório ao redor do emoji do clima; as configurações de raios se aplicam à forma «Raios».'
         },
         zh: {
             'Кастомизация': '个性化',
@@ -4499,7 +4519,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'Файл слишком большой (макс. 10 МБ)': '文件过大（最大 10 MB）',
             'Поддерживаются только TTF и OTF': '仅支持 TTF 和 OTF',
             'Не удалось прочитать файл шрифта': '无法读取字体文件',
-            'Шрифт не найден на устройстве': '设备上未找到字体'
+            'Шрифт не найден на устройстве': '设备上未找到字体',
+            'Форма применяется ко всем карточкам приложения. «Глубина» управляет тенями, «Скругление» — радиусом, а число углов превращает прямоугольники в фигурные панели. Настройки 8 углов появляются, когда выбран режим «8».': '形状应用于应用中的所有卡片。“深度”控制阴影，“圆角”控制半径，边数可将矩形变成异形面板。选择“8”时会显示 8 角设置。',
+            'Фигурка меняет вращающийся элемент вокруг смайлика погоды; параметры лучей действуют для формы «Лучи».': '图形会改变天气表情周围的旋转元素；光线设置仅适用于“光线”形状。'
         },
         ja: {
             'Кастомизация': 'カスタマイズ',
@@ -4525,7 +4547,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'Файл слишком большой (макс. 10 МБ)': 'ファイルが大きすぎます（最大 10 MB）',
             'Поддерживаются только TTF и OTF': 'TTF と OTF のみ対応しています',
             'Не удалось прочитать файл шрифта': 'フォントファイルを読み取れませんでした',
-            'Шрифт не найден на устройстве': '端末にフォントが見つかりません'
+            'Шрифт не найден на устройстве': '端末にフォントが見つかりません',
+            'Форма применяется ко всем карточкам приложения. «Глубина» управляет тенями, «Скругление» — радиусом, а число углов превращает прямоугольники в фигурные панели. Настройки 8 углов появляются, когда выбран режим «8».': '形状はアプリ内のすべてのカードに適用されます。「深さ」は影、「角丸」は半径を調整し、角の数で長方形を変形パネルにできます。8 角の設定は「8」を選択すると表示されます。',
+            'Фигурка меняет вращающийся элемент вокруг смайлика погоды; параметры лучей действуют для формы «Лучи».': '図形は天気絵文字の周囲で回転する要素を変更します。光線の設定は「光線」形状に適用されます。'
         },
         tr: {
             'Кастомизация': 'Kişiselleştirme',
@@ -4551,7 +4575,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'Файл слишком большой (макс. 10 МБ)': 'Dosya çok büyük (en fazla 10 MB)',
             'Поддерживаются только TTF и OTF': 'Yalnızca TTF ve OTF desteklenir',
             'Не удалось прочитать файл шрифта': 'Yazı tipi dosyası okunamadı',
-            'Шрифт не найден на устройстве': 'Yazı tipi cihazda bulunamadı'
+            'Шрифт не найден на устройстве': 'Yazı tipi cihazda bulunamadı',
+            'Форма применяется ко всем карточкам приложения. «Глубина» управляет тенями, «Скругление» — радиусом, а число углов превращает прямоугольники в фигурные панели. Настройки 8 углов появляются, когда выбран режим «8».': 'Şekil uygulamadaki tüm kartlara uygulanır. «Derinlik» gölgeleri, «Yuvarlaklık» yarıçapı kontrol eder; köşe sayısı dikdörtgenleri biçimli panellere dönüştürür. 8 köşe ayarları «8» seçildiğinde görünür.',
+            'Фигурка меняет вращающийся элемент вокруг смайлика погоды; параметры лучей действуют для формы «Лучи».': 'Figür, hava durumu emojisinin etrafındaki dönen öğeyi değiştirir; ışın ayarları «Işınlar» şekli için geçerlidir.'
         }
     };
 
@@ -4610,13 +4636,13 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                     items: [
                         'Своя типографика: загрузите TTF или OTF — шрифт применится ко всему интерфейсу',
                         'Три набора иконок погоды: Noto, контурный Material и новый 8-битный Pixel',
-                        'Новая вкладка «Кастомизация» для шрифта и иконок',
+                        'Единая «Кастомизация»: тема, палитра, фигурка у иконки, шрифты и наборы иконок',
                         'Шрифт и набор иконок сохраняются на устройстве и работают офлайн'
                     ]
                 },
                 {
                     version: '1.1',
-                    date: 'Ноябрь 2026',
+                    date: '7 ноября 2026',
                     current: false,
                     title: 'Material 3 Expressive',
                     items: [
@@ -4653,13 +4679,13 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                     items: [
                         'Your own typography: upload a TTF or OTF and the font applies to the whole interface',
                         'Three weather icon sets: Noto, outline Material, and the new 8-bit Pixel',
-                        'New Customization tab for fonts and icons',
+                        'Unified Customization: theme, palette, icon ornament, fonts, and icon sets',
                         'The selected font and icon set are stored on the device and work offline'
                     ]
                 },
                 {
                     version: '1.1',
-                    date: 'November 2026',
+                    date: 'November 7, 2026',
                     current: false,
                     title: 'Material 3 Expressive',
                     items: [
@@ -5611,7 +5637,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
 
     // === ВКЛАДКИ НАСТРОЕК ===
     function setSettingsTab(tab, btn) {
-        const target = ['main', 'geometry', 'custom', 'dev'].indexOf(tab) !== -1 ? tab : 'main';
+        const target = ['main', 'geometry', 'dev'].indexOf(tab) !== -1 ? tab : 'main';
         document.querySelectorAll('.settings-page').forEach(page => {
             page.classList.toggle('active', page.getAttribute('data-settings-page') === target);
         });

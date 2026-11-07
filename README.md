@@ -7,9 +7,20 @@ Material You weather app for Android. The interface is a single `weather.html` f
 - Текущая погода, почасовой прогноз и прогноз на несколько дней.
 - Поиск города и список популярных городов.
 - Светлая и тёмная темы, несколько языков интерфейса.
-- Свои шрифты TTF/OTF и три набора иконок погоды: Noto, Material, Pixel.
+- Вкладка «Кастомизация»: тема, палитра, фигурка у иконки, свои шрифты TTF/OTF и три набора иконок погоды: Noto, Material, Pixel.
 - Без рекламы и регистрации.
 - Погодные данные: [Open-Meteo](https://open-meteo.com/).
+
+## Версии
+
+Старые версии не удаляются: каждый релиз хранится отдельно на GitHub.
+
+| Версия | Дата | Релиз |
+| --- | --- | --- |
+| 1.1 | 7 ноября 2026 | [v1.1](https://github.com/itzDrevQC/PixelWeather/releases/tag/v1.1) |
+| 1.0 | 6 ноября 2026 | [v1.0](https://github.com/itzDrevQC/PixelWeather/releases/tag/v1.0) |
+
+Актуальная версия: [последний релиз](https://github.com/itzDrevQC/PixelWeather/releases/latest).
 
 ## Структура
 
