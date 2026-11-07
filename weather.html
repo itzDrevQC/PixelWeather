@@ -995,6 +995,7 @@
             margin-top: -1.5px;
             border-radius: 50px;
             background: linear-gradient(90deg, hsl(var(--h), var(--s), 66%, 0.35), hsl(var(--h), var(--s), 58%, 0.2));
+            transition: left 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .sun-progress {
             position: absolute;
@@ -7181,6 +7182,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
     function updateSunArc(sunrise, sunset, localTime) {
         const progress = document.getElementById('sun-progress');
         const dot = document.getElementById('sun-dot');
+        const line = document.querySelector('.sun-line');
         if (!progress || !dot) return;
 
         const start = clockToMinutes(sunrise);
@@ -7195,6 +7197,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
 
         progress.style.width = percent + '%';
         dot.style.left = percent + '%';
+        if (line) line.style.left = percent + '%';
     }
 
     function renderUI(w) {
