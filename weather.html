@@ -806,7 +806,7 @@
 
         @keyframes sunWaveFlow {
             from { -webkit-mask-position: 0 50%; mask-position: 0 50%; }
-            to { -webkit-mask-position: 24px 50%; mask-position: 24px 50%; }
+            to { -webkit-mask-position: 40px 50%; mask-position: 40px 50%; }
         }
 
         /* === КАПСУЛЫ ПРОГНОЗА ПО ЧАСАМ (MATERIAL YOU) === */
@@ -981,14 +981,18 @@
         }
         .sun-track {
             position: relative;
-            height: 10px;
+            height: 12px;
             margin: 2px 0 0;
             border-radius: 50px;
             background: var(--bg);
         }
         .sun-line {
             position: absolute;
-            inset: 0;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 3px;
+            margin-top: -1.5px;
             border-radius: 50px;
             background: linear-gradient(90deg, hsl(var(--h), var(--s), 66%, 0.35), hsl(var(--h), var(--s), 58%, 0.2));
         }
@@ -1016,25 +1020,24 @@
             transition: left 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
             animation: sunPulse 3s ease-in-out infinite;
         }
-        .sun-line, .sun-progress {
-            --sun-wave: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='10'%20viewBox='0%200%2024%2010'%3E%3Cpath%20d='M0,5C2,1,4,1,6,5S10,9,12,5S16,1,18,5S22,9,24,5'%20fill='none'%20stroke='white'%20stroke-width='2.4'%20stroke-linecap='round'/%3E%3C/svg%3E");
+        .sun-progress {
+            --sun-wave: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='40'%20height='10'%20viewBox='0%200%2040%2010'%3E%3Cpath%20d='M0,5C5,1,15,1,20,5S35,9,40,5'%20fill='none'%20stroke='white'%20stroke-width='3'%20stroke-linecap='round'/%3E%3C/svg%3E");
             border-radius: 0;
             -webkit-mask-image: var(--sun-wave);
             -webkit-mask-repeat: repeat-x;
-            -webkit-mask-size: 24px 10px;
+            -webkit-mask-size: 40px 10px;
             -webkit-mask-position: 0 50%;
             mask-image: var(--sun-wave);
             mask-repeat: repeat-x;
-            mask-size: 24px 10px;
+            mask-size: 40px 10px;
             mask-position: 0 50%;
             animation: sunWaveFlow 2.4s linear infinite;
         }
-        body.no-anim .sun-line,
         body.no-anim .sun-progress {
             animation: none;
         }
         @media (prefers-reduced-motion: reduce) {
-            .sun-line, .sun-progress { animation: none; }
+            .sun-progress { animation: none; }
         }
         .sun-labels {
             display: flex;
@@ -2164,7 +2167,7 @@
             letter-spacing: 0.3px;
             color: var(--md-on-surface-variant);
         }
-        .sun-track { height: 10px; background: transparent; }
+        .sun-track { height: 12px; background: transparent; }
         .sun-line { background: var(--md-outline-variant); }
         .sun-progress { background: var(--md-primary); }
         .sun-dot {
