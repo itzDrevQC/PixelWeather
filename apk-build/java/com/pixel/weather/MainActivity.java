@@ -5,6 +5,9 @@ import android.app.Activity;
 import android.app.WallpaperColors;
 import android.app.WallpaperManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -19,20 +22,32 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.VibrationEffect;
+import android.net.Uri;
 import android.os.Vibrator;
+import android.provider.OpenableColumns;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
+import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,6 +55,13 @@ public class MainActivity extends Activity {
 
     private static final Pattern RGB_PATTERN =
             Pattern.compile("rgba?\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)");
+
+    private static final int REQUEST_FONT = 4102;
+    private static final long MAX_FONT_BYTES = 10L * 1024L * 1024L;
+    private static final String FONT_FILE = "user-font.ttf";
+    private static final String FONT_PREFS = "pixel_weather_font";
+    private static final String FONT_NAME_KEY = "display_name";
+    private static final String FONT_MIME_KEY = "mime";
 
     private WebView webView;
     private FrameLayout root;
@@ -91,6 +113,16 @@ public class MainActivity extends Activity {
                 // Страховка: если JS не успел позвать appReady, показываем приложение
                 handler.postDelayed(revealFallback, 1200);
             }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                // Свой шрифт лежит во внутренней памяти и отдаётся тем же origin,
+                // что и HTML, поэтому FontFace загружает его без CORS-проблем.
+                if (url != null && url.contains("/user-font.ttf")) {
+                    return serveUserFont();
+                }
+                return super.shouldInterceptRequest(view, url);
+            }
         });
         webView.addJavascriptInterface(new ThemeBridge(), "Android");
 
@@ -134,6 +166,152 @@ public class MainActivity extends Activity {
             return "<html><body style=\"font-family:sans-serif;padding:24px\">"
                     + "Не удалось загрузить приложение.</body></html>";
         }
+    }
+
+    private File fontFile() {
+        return new File(getFilesDir(), FONT_FILE);
+    }
+
+    private SharedPreferences fontPrefs() {
+        return getSharedPreferences(FONT_PREFS, MODE_PRIVATE);
+    }
+
+    private String getFontMime() {
+        String mime = fontPrefs().getString(FONT_MIME_KEY, "font/ttf");
+        return "font/otf".equals(mime) ? "font/otf" : "font/ttf";
+    }
+
+    private WebResourceResponse serveUserFont() {
+        File font = fontFile();
+        if (!font.isFile()) {
+            return new WebResourceResponse("text/plain", "utf-8", new ByteArrayInputStream(new byte[0]));
+        }
+        try {
+            WebResourceResponse response = new WebResourceResponse(
+                    getFontMime(), null, new FileInputStream(font));
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Cache-Control", "no-store");
+            headers.put("Access-Control-Allow-Origin", "*");
+            response.setResponseHeaders(headers);
+            return response;
+        } catch (IOException e) {
+            return new WebResourceResponse("text/plain", "utf-8", new ByteArrayInputStream(new byte[0]));
+        }
+    }
+
+    private String detectFontMime(File file) {
+        try (InputStream in = new FileInputStream(file)) {
+            byte[] header = new byte[4];
+            if (in.read(header) != 4) return null;
+            int tag = ((header[0] & 0xFF) << 24)
+                    | ((header[1] & 0xFF) << 16)
+                    | ((header[2] & 0xFF) << 8)
+                    | (header[3] & 0xFF);
+            if (tag == 0x4F54544F) return "font/otf";
+            if (tag == 0x00010000 || tag == 0x74727565 || tag == 0x74797031) return "font/ttf";
+            return null;
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    private String queryDisplayName(Uri uri) {
+        String name = "font.ttf";
+        try (Cursor cursor = getContentResolver().query(
+                uri, new String[]{OpenableColumns.DISPLAY_NAME}, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                if (index >= 0) {
+                    String value = cursor.getString(index);
+                    if (value != null && !value.trim().isEmpty()) name = value.trim();
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return name;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != REQUEST_FONT) return;
+
+        if (resultCode != RESULT_OK || data == null || data.getData() == null) {
+            notifyFont(false, "", "cancel");
+            return;
+        }
+
+        Uri uri = data.getData();
+        String displayName = queryDisplayName(uri);
+        File target = fontFile();
+        File temp = new File(getFilesDir(), FONT_FILE + ".tmp");
+
+        boolean copied = false;
+        try (InputStream in = getContentResolver().openInputStream(uri);
+             FileOutputStream out = new FileOutputStream(temp)) {
+            if (in == null) throw new IOException("No input stream");
+            byte[] buffer = new byte[8192];
+            long total = 0;
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                total += read;
+                if (total > MAX_FONT_BYTES) {
+                    notifyFont(false, "", "size");
+                    return;
+                }
+                out.write(buffer, 0, read);
+            }
+            copied = total > 0;
+        } catch (Exception e) {
+            notifyFont(false, "", "read");
+            return;
+        } finally {
+            if (!copied) temp.delete();
+        }
+
+        String mime = copied ? detectFontMime(temp) : null;
+        if (mime == null) {
+            temp.delete();
+            notifyFont(false, "", "type");
+            return;
+        }
+
+        if (target.exists() && !target.delete()) {
+            temp.delete();
+            notifyFont(false, "", "read");
+            return;
+        }
+        if (!temp.renameTo(target)) {
+            temp.delete();
+            notifyFont(false, "", "read");
+            return;
+        }
+
+        String lower = displayName.toLowerCase(Locale.US);
+        if (!lower.endsWith(".ttf") && !lower.endsWith(".otf")) {
+            displayName = displayName + ("font/otf".equals(mime) ? ".otf" : ".ttf");
+        }
+
+        fontPrefs().edit()
+                .putString(FONT_NAME_KEY, displayName)
+                .putString(FONT_MIME_KEY, mime)
+                .apply();
+        notifyFont(true, displayName, "");
+    }
+
+    private void notifyFont(boolean ok, String name, String reason) {
+        final WebView view = webView;
+        if (view == null) return;
+        final String script = "window.onFontPicked && window.onFontPicked("
+                + JSONObject.quote(name == null ? "" : name) + ","
+                + (ok ? "true" : "false") + ","
+                + JSONObject.quote(reason == null ? "" : reason) + ");";
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (webView != null) webView.evaluateJavascript(script, null);
+            }
+        });
     }
 
     // Прячем нативный splash только после первого кадра HTML.
@@ -288,6 +466,46 @@ public class MainActivity extends Activity {
             } catch (Exception e) {
                 return -1;
             }
+        }
+
+        @JavascriptInterface
+        public boolean hasFont() {
+            return fontFile().isFile();
+        }
+
+        @JavascriptInterface
+        public String getFontName() {
+            return fontPrefs().getString(FONT_NAME_KEY, "");
+        }
+
+        @JavascriptInterface
+        public void pickFont() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        intent.setType("*/*");
+                        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{
+                                "font/ttf",
+                                "font/otf",
+                                "application/x-font-ttf",
+                                "application/x-font-opentype",
+                                "application/octet-stream"
+                        });
+                        startActivityForResult(intent, REQUEST_FONT);
+                    } catch (Exception e) {
+                        notifyFont(false, "", "read");
+                    }
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void clearFont() {
+            fontFile().delete();
+            fontPrefs().edit().clear().apply();
         }
 
         @JavascriptInterface

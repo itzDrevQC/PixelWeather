@@ -7,6 +7,7 @@ Material You weather app for Android. The interface is a single `weather.html` f
 - Текущая погода, почасовой прогноз и прогноз на несколько дней.
 - Поиск города и список популярных городов.
 - Светлая и тёмная темы, несколько языков интерфейса.
+- Свои шрифты TTF/OTF и три набора иконок погоды: Noto, Material, Pixel.
 - Без рекламы и регистрации.
 - Погодные данные: [Open-Meteo](https://open-meteo.com/).
 

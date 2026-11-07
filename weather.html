@@ -65,6 +65,7 @@
             --h: 215; /* Оттенок по умолчанию */
             --s: 75%; /* Насыщенность акцента */
             --s-bg: 40%; /* Насыщенность фона */
+            --app-font: 'Comfortaa'; /* Comfortaa | system | PWCustomFont */
 
             /* Светлая тема MD3 */
             --bg: hsl(var(--h), var(--s-bg), 96%);
@@ -92,7 +93,7 @@
         /* Шрифт Comfortaa + системный округлый резерв + эмодзи из системы */
         * {
             box-sizing: border-box;
-            font-family: 'Comfortaa', 'Segoe UI', system-ui, 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+            font-family: var(--app-font), 'Segoe UI', system-ui, 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
             transition: background-color 0.35s ease, color 0.25s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), border-radius 0.3s ease;
             -webkit-tap-highlight-color: transparent;
 
@@ -1848,9 +1849,9 @@
             --shadow-alpha: 0.28;
         }
 
-        /* Типографика M3: Comfortaa с системным запасом */
+        /* Типографика M3: Comfortaa или выбранный шрифт с системным запасом */
         *, *::before, *::after {
-            font-family: 'Comfortaa', 'Roboto', 'Google Sans Text', 'Google Sans', 'Segoe UI', system-ui, -apple-system, 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+            font-family: var(--app-font), 'Roboto', 'Google Sans Text', 'Google Sans', 'Segoe UI', system-ui, -apple-system, 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
         }
         .g-emoji {
             font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
@@ -2049,6 +2050,14 @@
             stroke-linejoin: round;
             display: block;
         }
+        /* Пиксельный набор иконок: квадратные пиксели без сглаживания */
+        .weather-pixel {
+            width: 1em;
+            height: 1em;
+            display: block;
+            image-rendering: pixelated;
+            shape-rendering: crispEdges;
+        }
         .weather-emoji-big {
             display: flex;
             align-items: center;
@@ -2225,8 +2234,15 @@
             padding: 0;
             gap: 0;
             margin-bottom: 4px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
         }
+        .settings-tabs::-webkit-scrollbar { display: none; }
         .settings-tab {
+            flex: 0 0 auto;
             border-radius: 0;
             background: transparent;
             color: var(--md-on-surface-variant);
@@ -2405,6 +2421,123 @@
             color: var(--md-on-surface-variant);
             padding: 0 8px 12px;
         }
+
+        /* Кастомизация: шрифты и наборы иконок */
+        .font-preview {
+            margin: 4px 0 10px;
+            padding: 14px 16px;
+            border: 1px solid var(--md-outline-variant);
+            border-radius: var(--shape-sm);
+            background: var(--md-surface-container-highest);
+        }
+        .font-preview-sample {
+            font-size: 22px;
+            line-height: 30px;
+            font-weight: 600;
+            letter-spacing: -0.1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .font-preview-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 6px;
+            font-size: 11px;
+            line-height: 16px;
+            color: var(--md-on-surface-variant);
+        }
+        #font-preview-name,
+        #font-current {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        #font-current { max-width: 44%; }
+        #font-preview-range { flex-shrink: 0; }
+        .font-choice { padding: 4px 0 12px; }
+        .font-choice .mini-segmented { display: flex; width: 100%; }
+        .font-choice .mini-segmented button { flex: 1; padding: 9px 6px; }
+        .font-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .mini-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border: 1px solid var(--md-outline);
+            background: transparent;
+            color: var(--md-primary);
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 12px;
+            line-height: 16px;
+            font-weight: 500;
+            letter-spacing: 0.1px;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .mini-action[hidden] { display: none; }
+        .mini-action:hover {
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+        }
+        .mini-action:active { transform: scale(0.96); }
+        .mini-action.danger {
+            color: var(--md-error);
+            border-color: var(--md-outline-variant);
+        }
+        .mini-action.danger:hover {
+            background: var(--md-error-container);
+            color: var(--md-on-error-container);
+        }
+        .icon-pack-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+            padding: 10px 0 12px;
+        }
+        .icon-pack-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 76px;
+            padding: 10px 4px;
+            border: 1px solid var(--md-outline-variant);
+            border-radius: 16px;
+            background: transparent;
+            color: var(--md-on-surface);
+            font-size: 11px;
+            line-height: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .icon-pack-card:hover { background: var(--md-surface-container-high); }
+        .icon-pack-card.active {
+            border-color: var(--md-primary);
+            background: var(--md-secondary-container);
+            color: var(--md-on-secondary-container);
+        }
+        .icon-pack-preview {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            min-height: 26px;
+            font-size: 22px;
+        }
+        .icon-pack-preview .weather-glyph,
+        .icon-pack-preview .weather-pixel { width: 22px; height: 22px; }
 
         /* Разработчик */
         .dev-card {
@@ -3309,6 +3442,7 @@
     <div class="settings-tabs" role="tablist">
         <button class="settings-tab active" data-settings-tab="main" onclick="setSettingsTab('main', this)" role="tab">Основное</button>
         <button class="settings-tab" data-settings-tab="geometry" onclick="setSettingsTab('geometry', this)" role="tab">Геометрия</button>
+        <button class="settings-tab" data-settings-tab="custom" onclick="setSettingsTab('custom', this)" role="tab">Кастомизация</button>
         <button class="settings-tab" data-settings-tab="dev" onclick="setSettingsTab('dev', this)" role="tab">Разработчики</button>
     </div>
 
@@ -3572,6 +3706,79 @@
         <div class="settings-hint">Форма применяется ко всем карточкам приложения. «Глубина» управляет тенями, «Скругление» — радиусом, а число углов превращает прямоугольники в фигурные панели. Настройки 8 углов появляются, когда выбран режим «8». Настройки фигуры меняют вращающийся элемент вокруг смайлика погоды; параметры лучей действуют для формы «Лучи».</div>
     </div>
 
+    <!-- КАСТОМИЗАЦИЯ -->
+    <div class="settings-page" data-settings-page="custom">
+        <div class="settings-group">
+            <div class="settings-group-title">Шрифт</div>
+
+            <div class="setting-row">
+                <div class="setting-text">
+                    <span>Шрифт приложения</span>
+                    <small>Comfortaa, системный или свой TTF/OTF</small>
+                </div>
+                <span class="setting-value" id="font-current">Comfortaa</span>
+            </div>
+
+            <div class="font-preview">
+                <div class="font-preview-sample" id="font-preview-sample">Съешь ещё этих мягких булок</div>
+                <div class="font-preview-meta">
+                    <span id="font-preview-name">Comfortaa</span>
+                    <span id="font-preview-range">300–700</span>
+                </div>
+            </div>
+
+            <div class="font-choice">
+                <div class="mini-segmented" id="font-seg">
+                    <button data-font="comfortaa" onclick="setFontChoice('comfortaa', this)">Comfortaa</button>
+                    <button data-font="system" onclick="setFontChoice('system', this)">Системный</button>
+                    <button data-font="custom" onclick="setFontChoice('custom', this)">Свой</button>
+                </div>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-text">
+                    <span>Свой шрифт</span>
+                    <small>TTF или OTF, до 10 МБ</small>
+                </div>
+                <div class="font-actions">
+                    <button class="mini-action" id="font-upload-btn" onclick="pickCustomFont()">Загрузить</button>
+                    <button class="mini-action danger" id="font-remove-btn" onclick="clearCustomFont()" hidden>Удалить</button>
+                </div>
+            </div>
+            <input type="file" id="font-file-input" accept=".ttf,.otf,font/ttf,font/otf,application/x-font-ttf,application/x-font-opentype" style="display:none">
+            <div class="settings-hint" style="padding:0 0 12px">Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.</div>
+        </div>
+
+        <div class="settings-group">
+            <div class="settings-group-title">Иконки погоды</div>
+
+            <div class="icon-pack-grid" id="icon-pack-grid">
+                <button class="icon-pack-card" data-icon-pack="noto" onclick="setIconPack('noto', this)">
+                    <span class="icon-pack-preview" data-icon-preview="noto"></span>
+                    <span>Noto</span>
+                </button>
+                <button class="icon-pack-card" data-icon-pack="material" onclick="setIconPack('material', this)">
+                    <span class="icon-pack-preview" data-icon-preview="material"></span>
+                    <span>Material</span>
+                </button>
+                <button class="icon-pack-card" data-icon-pack="pixel" onclick="setIconPack('pixel', this)">
+                    <span class="icon-pack-preview" data-icon-preview="pixel"></span>
+                    <span>Pixel</span>
+                </button>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-text">
+                    <span>Набор</span>
+                    <small>Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит</small>
+                </div>
+                <span class="setting-value" id="icon-pack-current">Noto</span>
+            </div>
+
+            <div class="settings-hint" style="padding:0 0 12px">Набор применяется к большой иконке и почасовому прогнозу.</div>
+        </div>
+    </div>
+
     <!-- РАЗРАБОТЧИКИ -->
     <div class="settings-page" data-settings-page="dev">
         <div class="dev-card">
@@ -3587,7 +3794,7 @@
                 <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
                 drev.qc@gmail.com
             </a>
-            <div class="dev-version">Pixel Weather • Material You 1.1</div>
+            <div class="dev-version">Pixel Weather • Material You 1.2</div>
         </div>
 
         <div class="settings-group">
@@ -3595,7 +3802,7 @@
             <div class="about-row"><span>Данные</span><strong>Open-Meteo</strong></div>
             <div class="about-row"><span>Дизайн</span><strong>Material Design 3</strong></div>
             <div class="about-row"><span>Палитра</span><strong>Monet + обои</strong></div>
-            <div class="about-row"><span>Версия</span><strong>1.1</strong></div>
+            <div class="about-row"><span>Версия</span><strong>1.2</strong></div>
         </div>
     </div>
 </div>
@@ -3796,6 +4003,9 @@
         rayWidth: 100,           // 40..160% — толщина лучей
         rayDepth: 40,            // 0..100 — глубина тени под фигурой
         rayRound: 100,           // 0..100% — скругление кончиков лучей
+        fontChoice: 'comfortaa', // comfortaa | system | custom
+        fontName: '',            // имя загруженного TTF/OTF
+        iconPack: 'noto',        // noto | material | pixel
         lang: 'ru',              // язык интерфейса (I18N_LANGS)
         onboarded: false         // первичная настройка (язык → тема → город) пройдена
     };
@@ -4106,6 +4316,245 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         }
     };
 
+    // Новые строки v1.2: кастомизация шрифтов и наборов иконок.
+    const I18N_V12 = {
+        ru: {},
+        en: {
+            'Кастомизация': 'Customization',
+            'Шрифт': 'Font',
+            'Шрифт приложения': 'App font',
+            'Comfortaa, системный или свой TTF/OTF': 'Comfortaa, system, or your own TTF/OTF',
+            'Съешь ещё этих мягких булок': 'The quick brown fox jumps over the lazy dog',
+            'Встроенный шрифт приложения': 'Built-in app font',
+            'Системный': 'System',
+            'Свой': 'Custom',
+            'Свой шрифт': 'Custom font',
+            'TTF или OTF, до 10 МБ': 'TTF or OTF, up to 10 MB',
+            'Загрузить': 'Upload',
+            'Удалить': 'Remove',
+            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'The font applies to the whole interface and is stored on your device. The file is never uploaded.',
+            'Иконки погоды': 'Weather icons',
+            'Набор': 'Set',
+            'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — color emoji, Material — outline, Pixel — 8-bit',
+            'Набор применяется к большой иконке и почасовому прогнозу.': 'The set applies to the main icon and hourly forecast.',
+            'Не удалось загрузить шрифт': 'Could not load the font',
+            'Шрифт применён': 'Font applied',
+            'Свой шрифт удалён': 'Custom font removed',
+            'Файл слишком большой (макс. 10 МБ)': 'File is too large (max 10 MB)',
+            'Поддерживаются только TTF и OTF': 'Only TTF and OTF are supported',
+            'Не удалось прочитать файл шрифта': 'Could not read the font file',
+            'Шрифт не найден на устройстве': 'Font not found on device'
+        },
+        de: {
+            'Кастомизация': 'Anpassung',
+            'Шрифт': 'Schriftart',
+            'Шрифт приложения': 'App-Schriftart',
+            'Comfortaa, системный или свой TTF/OTF': 'Comfortaa, System oder eigene TTF/OTF',
+            'Съешь ещё этих мягких булок': 'Franz jagt im komplett verwahrlosten Taxi quer durch Bayern',
+            'Встроенный шрифт приложения': 'Eingebaute App-Schriftart',
+            'Системный': 'System',
+            'Свой': 'Eigene',
+            'Свой шрифт': 'Eigene Schriftart',
+            'TTF или OTF, до 10 МБ': 'TTF oder OTF, bis 10 MB',
+            'Загрузить': 'Laden',
+            'Удалить': 'Entfernen',
+            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'Die Schriftart gilt für die gesamte Oberfläche und wird auf dem Gerät gespeichert. Die Datei wird nie hochgeladen.',
+            'Иконки погоды': 'Wettersymbole',
+            'Набор': 'Satz',
+            'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — farbige Emojis, Material — Kontur, Pixel — 8-Bit',
+            'Набор применяется к большой иконке и почасовому прогнозу.': 'Der Satz gilt für das Hauptsymbol und die Stundenprognose.',
+            'Не удалось загрузить шрифт': 'Schriftart konnte nicht geladen werden',
+            'Шрифт применён': 'Schriftart angewendet',
+            'Свой шрифт удалён': 'Eigene Schriftart entfernt',
+            'Файл слишком большой (макс. 10 МБ)': 'Datei ist zu groß (max. 10 MB)',
+            'Поддерживаются только TTF и OTF': 'Nur TTF und OTF werden unterstützt',
+            'Не удалось прочитать файл шрифта': 'Schriftdatei konnte nicht gelesen werden',
+            'Шрифт не найден на устройстве': 'Schriftart auf dem Gerät nicht gefunden'
+        },
+        es: {
+            'Кастомизация': 'Personalización',
+            'Шрифт': 'Fuente',
+            'Шрифт приложения': 'Fuente de la app',
+            'Comfortaa, системный или свой TTF/OTF': 'Comfortaa, sistema o tu propio TTF/OTF',
+            'Съешь ещё этих мягких булок': 'El veloz murciélago hindú comía feliz cardillo y kiwi',
+            'Встроенный шрифт приложения': 'Fuente integrada de la app',
+            'Системный': 'Sistema',
+            'Свой': 'Personalizada',
+            'Свой шрифт': 'Fuente personalizada',
+            'TTF или OTF, до 10 МБ': 'TTF u OTF, hasta 10 MB',
+            'Загрузить': 'Cargar',
+            'Удалить': 'Quitar',
+            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'La fuente se aplica a toda la interfaz y se guarda en el dispositivo. El archivo nunca se sube.',
+            'Иконки погоды': 'Iconos del clima',
+            'Набор': 'Conjunto',
+            'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — emojis de color, Material — contorno, Pixel — 8 bits',
+            'Набор применяется к большой иконке и почасовому прогнозу.': 'El conjunto se aplica al icono principal y al pronóstico por horas.',
+            'Не удалось загрузить шрифт': 'No se pudo cargar la fuente',
+            'Шрифт применён': 'Fuente aplicada',
+            'Свой шрифт удалён': 'Fuente personalizada eliminada',
+            'Файл слишком большой (макс. 10 МБ)': 'El archivo es demasiado grande (máx. 10 MB)',
+            'Поддерживаются только TTF и OTF': 'Solo se admiten TTF y OTF',
+            'Не удалось прочитать файл шрифта': 'No se pudo leer el archivo de fuente',
+            'Шрифт не найден на устройстве': 'Fuente no encontrada en el dispositivo'
+        },
+        fr: {
+            'Кастомизация': 'Personnalisation',
+            'Шрифт': 'Police',
+            'Шрифт приложения': 'Police de l’application',
+            'Comfortaa, системный или свой TTF/OTF': 'Comfortaa, système ou votre propre TTF/OTF',
+            'Съешь ещё этих мягких булок': 'Portez ce vieux whisky au juge blond qui fume',
+            'Встроенный шрифт приложения': 'Police intégrée de l’application',
+            'Системный': 'Système',
+            'Свой': 'Personnalisée',
+            'Свой шрифт': 'Police personnalisée',
+            'TTF или OTF, до 10 МБ': 'TTF ou OTF, jusqu’à 10 MB',
+            'Загрузить': 'Charger',
+            'Удалить': 'Supprimer',
+            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'La police s’applique à toute l’interface et est stockée sur l’appareil. Le fichier n’est jamais envoyé.',
+            'Иконки погоды': 'Icônes météo',
+            'Набор': 'Jeu',
+            'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — emojis couleur, Material — contour, Pixel — 8 bits',
+            'Набор применяется к большой иконке и почасовому прогнозу.': 'Le jeu s’applique à l’icône principale et aux prévisions horaires.',
+            'Не удалось загрузить шрифт': 'Impossible de charger la police',
+            'Шрифт применён': 'Police appliquée',
+            'Свой шрифт удалён': 'Police personnalisée supprimée',
+            'Файл слишком большой (макс. 10 МБ)': 'Fichier trop volumineux (10 MB max)',
+            'Поддерживаются только TTF и OTF': 'Seuls les formats TTF et OTF sont pris en charge',
+            'Не удалось прочитать файл шрифта': 'Impossible de lire le fichier de police',
+            'Шрифт не найден на устройстве': 'Police introuvable sur l’appareil'
+        },
+        it: {
+            'Кастомизация': 'Personalizzazione',
+            'Шрифт': 'Carattere',
+            'Шрифт приложения': 'Carattere dell’app',
+            'Comfortaa, системный или свой TTF/OTF': 'Comfortaa, sistema o il tuo TTF/OTF',
+            'Съешь ещё этих мягких булок': 'Ma la volpe col suo balzo ha raggiunto il quieto Fido',
+            'Встроенный шрифт приложения': 'Carattere integrato dell’app',
+            'Системный': 'Sistema',
+            'Свой': 'Personalizzato',
+            'Свой шрифт': 'Carattere personalizzato',
+            'TTF или OTF, до 10 МБ': 'TTF o OTF, fino a 10 MB',
+            'Загрузить': 'Carica',
+            'Удалить': 'Rimuovi',
+            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'Il carattere si applica a tutta l’interfaccia ed è salvato sul dispositivo. Il file non viene mai caricato.',
+            'Иконки погоды': 'Icone meteo',
+            'Набор': 'Set',
+            'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — emoji a colori, Material — contorno, Pixel — 8 bit',
+            'Набор применяется к большой иконке и почасовому прогнозу.': 'Il set si applica all’icona principale e alle previsioni orarie.',
+            'Не удалось загрузить шрифт': 'Impossibile caricare il carattere',
+            'Шрифт применён': 'Carattere applicato',
+            'Свой шрифт удалён': 'Carattere personalizzato rimosso',
+            'Файл слишком большой (макс. 10 МБ)': 'File troppo grande (max 10 MB)',
+            'Поддерживаются только TTF и OTF': 'Sono supportati solo TTF e OTF',
+            'Не удалось прочитать файл шрифта': 'Impossibile leggere il file del carattere',
+            'Шрифт не найден на устройстве': 'Carattere non trovato sul dispositivo'
+        },
+        pt: {
+            'Кастомизация': 'Personalização',
+            'Шрифт': 'Fonte',
+            'Шрифт приложения': 'Fonte do app',
+            'Comfortaa, системный или свой TTF/OTF': 'Comfortaa, sistema ou seu próprio TTF/OTF',
+            'Съешь ещё этих мягких булок': 'Um pequeno jabuti xereta viu dez cegonhas felizes',
+            'Встроенный шрифт приложения': 'Fonte integrada do app',
+            'Системный': 'Sistema',
+            'Свой': 'Personalizada',
+            'Свой шрифт': 'Fonte personalizada',
+            'TTF или OTF, до 10 МБ': 'TTF ou OTF, até 10 MB',
+            'Загрузить': 'Carregar',
+            'Удалить': 'Remover',
+            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'A fonte é aplicada a toda a interface e fica armazenada no dispositivo. O arquivo nunca é enviado.',
+            'Иконки погоды': 'Ícones do clima',
+            'Набор': 'Conjunto',
+            'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — emojis coloridos, Material — contorno, Pixel — 8 bits',
+            'Набор применяется к большой иконке и почасовому прогнозу.': 'O conjunto é aplicado ao ícone principal e à previsão por hora.',
+            'Не удалось загрузить шрифт': 'Não foi possível carregar a fonte',
+            'Шрифт применён': 'Fonte aplicada',
+            'Свой шрифт удалён': 'Fonte personalizada removida',
+            'Файл слишком большой (макс. 10 МБ)': 'O arquivo é muito grande (máx. 10 MB)',
+            'Поддерживаются только TTF и OTF': 'Apenas TTF e OTF são suportados',
+            'Не удалось прочитать файл шрифта': 'Não foi possível ler o arquivo da fonte',
+            'Шрифт не найден на устройстве': 'Fonte não encontrada no dispositivo'
+        },
+        zh: {
+            'Кастомизация': '个性化',
+            'Шрифт': '字体',
+            'Шрифт приложения': '应用字体',
+            'Comfortaa, системный или свой TTF/OTF': 'Comfortaa、系统字体或自定义 TTF/OTF',
+            'Съешь ещё этих мягких булок': '永和九年，岁在癸丑，暮春之初',
+            'Встроенный шрифт приложения': '内置应用字体',
+            'Системный': '系统',
+            'Свой': '自定义',
+            'Свой шрифт': '自定义字体',
+            'TTF или OTF, до 10 МБ': 'TTF 或 OTF，最大 10 MB',
+            'Загрузить': '上传',
+            'Удалить': '删除',
+            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': '字体会应用于整个界面并保存在设备上。文件不会上传到网络。',
+            'Иконки погоды': '天气图标',
+            'Набор': '图标集',
+            'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — 彩色表情，Material — 线条，Pixel — 8 位',
+            'Набор применяется к большой иконке и почасовому прогнозу.': '图标集会应用于主图标和逐小时预报。',
+            'Не удалось загрузить шрифт': '无法加载字体',
+            'Шрифт применён': '字体已应用',
+            'Свой шрифт удалён': '已移除自定义字体',
+            'Файл слишком большой (макс. 10 МБ)': '文件过大（最大 10 MB）',
+            'Поддерживаются только TTF и OTF': '仅支持 TTF 和 OTF',
+            'Не удалось прочитать файл шрифта': '无法读取字体文件',
+            'Шрифт не найден на устройстве': '设备上未找到字体'
+        },
+        ja: {
+            'Кастомизация': 'カスタマイズ',
+            'Шрифт': 'フォント',
+            'Шрифт приложения': 'アプリのフォント',
+            'Comfortaa, системный или свой TTF/OTF': 'Comfortaa、システム、または独自の TTF/OTF',
+            'Съешь ещё этих мягких булок': 'いろはにほへと ちりぬるを',
+            'Встроенный шрифт приложения': 'アプリ内蔵フォント',
+            'Системный': 'システム',
+            'Свой': 'カスタム',
+            'Свой шрифт': 'カスタムフォント',
+            'TTF или OTF, до 10 МБ': 'TTF または OTF、最大 10 MB',
+            'Загрузить': 'アップロード',
+            'Удалить': '削除',
+            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'フォントはインターフェース全体に適用され、端末に保存されます。ファイルは外部に送信されません。',
+            'Иконки погоды': '天気アイコン',
+            'Набор': 'セット',
+            'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — カラー絵文字、Material — アウトライン、Pixel — 8 ビット',
+            'Набор применяется к большой иконке и почасовому прогнозу.': 'セットはメインアイコンと時間ごとの予報に適用されます。',
+            'Не удалось загрузить шрифт': 'フォントを読み込めませんでした',
+            'Шрифт применён': 'フォントを適用しました',
+            'Свой шрифт удалён': 'カスタムフォントを削除しました',
+            'Файл слишком большой (макс. 10 МБ)': 'ファイルが大きすぎます（最大 10 MB）',
+            'Поддерживаются только TTF и OTF': 'TTF と OTF のみ対応しています',
+            'Не удалось прочитать файл шрифта': 'フォントファイルを読み取れませんでした',
+            'Шрифт не найден на устройстве': '端末にフォントが見つかりません'
+        },
+        tr: {
+            'Кастомизация': 'Kişiselleştirme',
+            'Шрифт': 'Yazı tipi',
+            'Шрифт приложения': 'Uygulama yazı tipi',
+            'Comfortaa, системный или свой TTF/OTF': 'Comfortaa, sistem veya kendi TTF/OTF dosyanız',
+            'Съешь ещё этих мягких булок': 'Pijamalı hasta yağız şoföre çabucak güvendi',
+            'Встроенный шрифт приложения': 'Uygulamaya gömülü yazı tipi',
+            'Системный': 'Sistem',
+            'Свой': 'Özel',
+            'Свой шрифт': 'Özel yazı tipi',
+            'TTF или OTF, до 10 МБ': 'TTF veya OTF, 10 MB’a kadar',
+            'Загрузить': 'Yükle',
+            'Удалить': 'Kaldır',
+            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'Yazı tipi tüm arayüze uygulanır ve cihazda saklanır. Dosya asla internete yüklenmez.',
+            'Иконки погоды': 'Hava durumu simgeleri',
+            'Набор': 'Set',
+            'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — renkli emoji, Material — kontur, Pixel — 8 bit',
+            'Набор применяется к большой иконке и почасовому прогнозу.': 'Set ana simgeye ve saatlik tahmine uygulanır.',
+            'Не удалось загрузить шрифт': 'Yazı tipi yüklenemedi',
+            'Шрифт применён': 'Yazı tipi uygulandı',
+            'Свой шрифт удалён': 'Özel yazı tipi kaldırıldı',
+            'Файл слишком большой (макс. 10 МБ)': 'Dosya çok büyük (en fazla 10 MB)',
+            'Поддерживаются только TTF и OTF': 'Yalnızca TTF ve OTF desteklenir',
+            'Не удалось прочитать файл шрифта': 'Yazı tipi dosyası okunamadı',
+            'Шрифт не найден на устройстве': 'Yazı tipi cihazda bulunamadı'
+        }
+    };
+
     // Короткие обозначения федеральных округов для строки под городом.
     const I18N_DISTRICT_SHORT = {
         ru: {},
@@ -4147,16 +4596,28 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         }
     };
 
-    const APP_VERSION = '1.1';
+    const APP_VERSION = '1.2';
 
     const CHANGELOG_I18N = {
         ru: {
             current: 'Текущая',
             versions: [
                 {
-                    version: '1.1',
+                    version: '1.2',
                     date: 'Ноябрь 2026',
                     current: true,
+                    title: 'Шрифты и иконки',
+                    items: [
+                        'Своя типографика: загрузите TTF или OTF — шрифт применится ко всему интерфейсу',
+                        'Три набора иконок погоды: Noto, контурный Material и новый 8-битный Pixel',
+                        'Новая вкладка «Кастомизация» для шрифта и иконок',
+                        'Шрифт и набор иконок сохраняются на устройстве и работают офлайн'
+                    ]
+                },
+                {
+                    version: '1.1',
+                    date: 'Ноябрь 2026',
+                    current: false,
                     title: 'Material 3 Expressive',
                     items: [
                         'Плавные пружинные анимации и переходы Material 3 Expressive',
@@ -4185,9 +4646,21 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             current: 'Current',
             versions: [
                 {
-                    version: '1.1',
+                    version: '1.2',
                     date: 'November 2026',
                     current: true,
+                    title: 'Fonts and icons',
+                    items: [
+                        'Your own typography: upload a TTF or OTF and the font applies to the whole interface',
+                        'Three weather icon sets: Noto, outline Material, and the new 8-bit Pixel',
+                        'New Customization tab for fonts and icons',
+                        'The selected font and icon set are stored on the device and work offline'
+                    ]
+                },
+                {
+                    version: '1.1',
+                    date: 'November 2026',
+                    current: false,
                     title: 'Material 3 Expressive',
                     items: [
                         'Material 3 Expressive spring animations and transitions',
@@ -4236,6 +4709,8 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         if (typeof source !== 'string' || !source) return source;
         const extra = I18N_EXTRA[currentLang];
         if (extra && typeof extra[source] === 'string' && extra[source]) return extra[source];
+        const v12 = I18N_V12[currentLang];
+        if (v12 && typeof v12[source] === 'string' && v12[source]) return v12[source];
         const shortDistricts = I18N_DISTRICT_SHORT[currentLang];
         if (shortDistricts && typeof shortDistricts[source] === 'string' && shortDistricts[source]) return shortDistricts[source];
         const dict = I18N[currentLang];
@@ -4336,6 +4811,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             updateWallpaperUI();
             applyGeometry();
             applyHeroOrnament();
+            updateFontUI();
             setStatus(t(statusSource));
             updateCityRegion();
             updateCityInfo();
@@ -4382,6 +4858,13 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             const rayWidth = Number(saved.rayWidth);
             const rayDepth = Number(saved.rayDepth);
             const rayRound = Number(saved.rayRound);
+            const fontChoice = ['comfortaa', 'system', 'custom'].indexOf(saved.fontChoice) !== -1
+                ? saved.fontChoice
+                : DEFAULT_SETTINGS.fontChoice;
+            const fontName = typeof saved.fontName === 'string' ? saved.fontName.slice(0, 140) : '';
+            const iconPack = ['noto', 'material', 'pixel'].indexOf(saved.iconPack) !== -1
+                ? saved.iconPack
+                : DEFAULT_SETTINGS.iconPack;
             const themeMode = (saved.themeMode === 'light' || saved.themeMode === 'dark' || saved.themeMode === 'system')
                 ? saved.themeMode
                 : (saved.dark === true ? 'dark' : 'light');
@@ -4437,6 +4920,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                 rayRound: Number.isFinite(rayRound)
                     ? Math.min(100, Math.max(0, Math.round(rayRound / 5) * 5))
                     : DEFAULT_SETTINGS.rayRound,
+                fontChoice: fontChoice,
+                fontName: fontName,
+                iconPack: iconPack,
                 lang: lang,
                 onboarded: onboarded
             };
@@ -4481,6 +4967,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                 rayWidth: settings.rayWidth,
                 rayDepth: settings.rayDepth,
                 rayRound: settings.rayRound,
+                fontChoice: settings.fontChoice,
+                fontName: settings.fontName,
+                iconPack: settings.iconPack,
                 lang: currentLang,
                 onboarded: settings.onboarded
             }));
@@ -4553,6 +5042,12 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
 
     // Обратный поиск исходной строки, чтобы статус переводился при смене языка
     function statusSourceOf(text) {
+        for (const dict of [I18N_V12[currentLang], I18N_EXTRA[currentLang]]) {
+            if (!dict) continue;
+            for (const key in dict) {
+                if (dict[key] === text) return key;
+            }
+        }
         const dict = I18N[currentLang];
         if (!dict) return text;
         for (const key in I18N_INDEX) {
@@ -5116,7 +5611,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
 
     // === ВКЛАДКИ НАСТРОЕК ===
     function setSettingsTab(tab, btn) {
-        const target = ['main', 'geometry', 'dev'].indexOf(tab) !== -1 ? tab : 'main';
+        const target = ['main', 'geometry', 'custom', 'dev'].indexOf(tab) !== -1 ? tab : 'main';
         document.querySelectorAll('.settings-page').forEach(page => {
             page.classList.toggle('active', page.getAttribute('data-settings-page') === target);
         });
@@ -5375,6 +5870,19 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             localStorage.removeItem(SETTINGS_KEY);
         } catch (e) {}
 
+        // Сбрасываем и сохранённый пользовательский шрифт.
+        customFontLoadToken++;
+        customFontLoading = false;
+        const fontBridge = getAndroidBridge();
+        if (fontBridge && typeof fontBridge.clearFont === 'function') {
+            try { fontBridge.clearFont(); } catch (e) {}
+        }
+        try { deleteCustomFont().catch(() => {}); } catch (e) {}
+        if (customFontFace) {
+            try { document.fonts.delete(customFontFace); } catch (e) {}
+            customFontFace = null;
+        }
+
         settings = { ...DEFAULT_SETTINGS };
         currentCity = null;
         currentChroma = 0;
@@ -5490,6 +5998,11 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         setChecked('set-compact', settings.compact);
         setChecked('set-haptics', settings.haptics);
 
+        // Кастомизация: шрифт и набор иконок
+        applyFontChoice(settings.fontChoice, false);
+        applyIconPackUI();
+        refreshWeatherIcons();
+
         const refreshHint = document.getElementById('refresh-hint');
         if (refreshHint) updateRefreshHint();
 
@@ -5528,6 +6041,356 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         if (typeof syncCitySelection === 'function') syncCitySelection();
     }
 
+    // === КАСТОМИЗАЦИЯ: ШРИФТЫ ===
+    const FONT_STACKS = {
+        comfortaa: "'Comfortaa'",
+        system: "'Roboto', system-ui",
+        custom: "'PWCustomFont', 'Comfortaa'"
+    };
+    const CUSTOM_FONT_FAMILY = 'PWCustomFont';
+    const FONT_DB_NAME = 'pixel-weather-fonts';
+    const FONT_DB_STORE = 'fonts';
+    const FONT_MAX_BYTES = 10 * 1024 * 1024;
+    let customFontFace = null;
+    let customFontLoading = false;
+    let customFontLoadToken = 0;
+
+    function getAndroidBridge() {
+        return (typeof window !== 'undefined' && window.Android) ? window.Android : null;
+    }
+
+    function applyFontChoice(choice, persist) {
+        const valid = ['comfortaa', 'system', 'custom'].indexOf(choice) !== -1 ? choice : 'comfortaa';
+        settings.fontChoice = valid;
+        document.documentElement.style.setProperty('--app-font', FONT_STACKS[valid]);
+        updateFontUI();
+        if (valid === 'custom') {
+            initCustomFont(false);
+        } else {
+            // Отменяем незавершённую загрузку, чтобы она не вернула шрифт обратно.
+            customFontLoadToken++;
+            customFontLoading = false;
+        }
+        if (persist) saveSettingsDebounced();
+    }
+
+    function setFontChoice(choice, btn) {
+        if (choice === 'custom') {
+            const bridge = getAndroidBridge();
+            let hasStored = false;
+            if (bridge && typeof bridge.hasFont === 'function') {
+                try { hasStored = bridge.hasFont() === true; } catch (e) {}
+            }
+            if (!hasStored && !settings.fontName) {
+                pickCustomFont();
+                return;
+            }
+        }
+        applyFontChoice(choice, true);
+    }
+
+    function updateFontUI() {
+        const current = document.getElementById('font-current');
+        const previewName = document.getElementById('font-preview-name');
+        const previewRange = document.getElementById('font-preview-range');
+        const removeBtn = document.getElementById('font-remove-btn');
+        const seg = document.getElementById('font-seg');
+
+        // Держим исходные строки: MutationObserver переведёт их сам,
+        // а при смене языка подпись обновится из того же исходника.
+        const customName = settings.fontName || 'Свой шрифт';
+        const labels = {
+            comfortaa: ['Comfortaa', '300–700'],
+            system: ['Системный', '400–700'],
+            custom: [customName, 'TTF / OTF']
+        };
+        const label = labels[settings.fontChoice] || labels.comfortaa;
+        if (current) current.innerText = label[0];
+        if (previewName) previewName.innerText = label[0];
+        if (previewRange) previewRange.innerText = label[1];
+        if (removeBtn) removeBtn.hidden = !(settings.fontChoice === 'custom' || settings.fontName);
+        if (seg) {
+            seg.querySelectorAll('button').forEach(button => {
+                button.classList.toggle('active', button.getAttribute('data-font') === settings.fontChoice);
+            });
+        }
+    }
+
+    function pickCustomFont() {
+        haptic(12);
+        const bridge = getAndroidBridge();
+        if (bridge && typeof bridge.pickFont === 'function') {
+            try {
+                bridge.pickFont();
+                return;
+            } catch (e) {}
+        }
+        const input = document.getElementById('font-file-input');
+        if (input) {
+            input.value = '';
+            input.click();
+        }
+    }
+
+    function handleFontFileInput(file) {
+        if (!file) return;
+        const name = String(file.name || 'font.ttf');
+        const lower = name.toLowerCase();
+        if (!/\.(ttf|otf)$/.test(lower)) {
+            setStatus(t('Поддерживаются только TTF и OTF'));
+            return;
+        }
+        if (file.size > FONT_MAX_BYTES) {
+            setStatus(t('Файл слишком большой (макс. 10 МБ)'));
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+            const buffer = reader.result;
+            registerCustomFont(buffer, name).then(() => {
+                return storeCustomFont(buffer, name);
+            }).then(() => {
+                settings.fontName = name;
+                applyFontChoice('custom', true);
+                setStatus(t('Шрифт применён'));
+            }).catch(() => {
+                applyFontFallback('Не удалось загрузить шрифт');
+            });
+        };
+        reader.onerror = () => setStatus(t('Не удалось прочитать файл шрифта'));
+        reader.readAsArrayBuffer(file);
+    }
+
+    async function registerCustomFont(buffer, name) {
+        if (!window.FontFace || !document.fonts) throw new Error('FontFace unavailable');
+        if (customFontFace) {
+            try { document.fonts.delete(customFontFace); } catch (e) {}
+            customFontFace = null;
+        }
+        const face = new FontFace(CUSTOM_FONT_FAMILY, buffer);
+        await face.load();
+        document.fonts.add(face);
+        customFontFace = face;
+        return face;
+    }
+
+    async function initCustomFont(force) {
+        if (customFontLoading && !force) return;
+        const token = ++customFontLoadToken;
+        const isCurrent = () => token === customFontLoadToken;
+        const bridge = getAndroidBridge();
+        if (bridge && typeof bridge.hasFont === 'function') {
+            let hasFont = false;
+            try { hasFont = bridge.hasFont() === true; } catch (e) {}
+            if (!hasFont) {
+                if (isCurrent() && settings.fontChoice === 'custom') applyFontFallback();
+                return;
+            }
+            let name = settings.fontName;
+            try {
+                if (typeof bridge.getFontName === 'function') name = bridge.getFontName() || name;
+            } catch (e) {}
+            try {
+                customFontLoading = true;
+                const url = 'https://appassets.androidplatform.net/user-font.ttf?v=' + Date.now();
+                const face = new FontFace(CUSTOM_FONT_FAMILY, 'url("' + url + '")');
+                await face.load();
+                if (!isCurrent()) return;
+                if (customFontFace) {
+                    try { document.fonts.delete(customFontFace); } catch (e) {}
+                }
+                document.fonts.add(face);
+                customFontFace = face;
+                settings.fontName = name || 'Свой шрифт';
+                updateFontUI();
+                saveSettingsDebounced();
+            } catch (e) {
+                if (isCurrent()) applyFontFallback('Не удалось загрузить шрифт');
+            } finally {
+                if (isCurrent()) customFontLoading = false;
+            }
+            return;
+        }
+
+        try {
+            customFontLoading = true;
+            const stored = await readCustomFont();
+            if (!isCurrent()) return;
+            if (!stored) {
+                if (settings.fontChoice === 'custom') applyFontFallback();
+                return;
+            }
+            const face = await registerCustomFont(stored.buffer, stored.name);
+            if (!isCurrent()) {
+                try { document.fonts.delete(face); } catch (e) {}
+                if (customFontFace === face) customFontFace = null;
+                return;
+            }
+            if (stored.name) settings.fontName = stored.name;
+            updateFontUI();
+            saveSettingsDebounced();
+        } catch (e) {
+            if (isCurrent()) applyFontFallback('Не удалось загрузить шрифт');
+        } finally {
+            if (isCurrent()) customFontLoading = false;
+        }
+    }
+
+    function applyFontFallback(message) {
+        settings.fontChoice = 'comfortaa';
+        settings.fontName = '';
+        const bridge = getAndroidBridge();
+        if (bridge && typeof bridge.clearFont === 'function') {
+            try { bridge.clearFont(); } catch (e) {}
+        }
+        try { deleteCustomFont().catch(() => {}); } catch (e) {}
+        if (customFontFace) {
+            try { document.fonts.delete(customFontFace); } catch (e) {}
+            customFontFace = null;
+        }
+        document.documentElement.style.setProperty('--app-font', FONT_STACKS.comfortaa);
+        updateFontUI();
+        saveSettingsDebounced();
+        setStatus(t(message || 'Шрифт не найден на устройстве'));
+    }
+
+    async function clearCustomFont() {
+        haptic(12);
+        customFontLoadToken++;
+        customFontLoading = false;
+        const bridge = getAndroidBridge();
+        if (bridge && typeof bridge.clearFont === 'function') {
+            try { bridge.clearFont(); } catch (e) {}
+        }
+        try { await deleteCustomFont(); } catch (e) {}
+        if (customFontFace) {
+            try { document.fonts.delete(customFontFace); } catch (e) {}
+            customFontFace = null;
+        }
+        settings.fontName = '';
+        settings.fontChoice = 'comfortaa';
+        document.documentElement.style.setProperty('--app-font', FONT_STACKS.comfortaa);
+        updateFontUI();
+        saveSettingsDebounced();
+        setStatus(t('Свой шрифт удалён'));
+    }
+
+    window.onFontPicked = function(name, ok, reason) {
+        if (!ok) {
+            if (reason === 'size') setStatus(t('Файл слишком большой (макс. 10 МБ)'));
+            else if (reason === 'type') setStatus(t('Поддерживаются только TTF и OTF'));
+            else if (reason === 'read') setStatus(t('Не удалось прочитать файл шрифта'));
+            return;
+        }
+        settings.fontName = String(name || '').slice(0, 140) || 'Свой шрифт';
+        settings.fontChoice = 'custom';
+        document.documentElement.style.setProperty('--app-font', FONT_STACKS.custom);
+        updateFontUI();
+        initCustomFont(true);
+        saveSettingsDebounced();
+        setStatus(t('Шрифт применён'));
+    };
+
+    // IndexedDB для браузерной версии — APK хранит шрифт во внутренней памяти
+    function openFontDb() {
+        return new Promise((resolve, reject) => {
+            if (!window.indexedDB) { reject(new Error('IndexedDB unavailable')); return; }
+            const request = indexedDB.open(FONT_DB_NAME, 1);
+            request.onupgradeneeded = () => {
+                const db = request.result;
+                if (!db.objectStoreNames.contains(FONT_DB_STORE)) db.createObjectStore(FONT_DB_STORE);
+            };
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error || new Error('IndexedDB error'));
+        });
+    }
+
+    function storeCustomFont(buffer, name) {
+        return openFontDb().then(db => new Promise((resolve, reject) => {
+            const tx = db.transaction(FONT_DB_STORE, 'readwrite');
+            tx.objectStore(FONT_DB_STORE).put({ buffer: buffer, name: name, savedAt: Date.now() }, 'custom');
+            tx.oncomplete = () => { db.close(); resolve(); };
+            tx.onerror = () => { db.close(); reject(tx.error || new Error('IndexedDB write error')); };
+        }));
+    }
+
+    function readCustomFont() {
+        return openFontDb().then(db => new Promise((resolve, reject) => {
+            const tx = db.transaction(FONT_DB_STORE, 'readonly');
+            const request = tx.objectStore(FONT_DB_STORE).get('custom');
+            request.onsuccess = () => {
+                const value = request.result;
+                db.close();
+                resolve(value && value.buffer ? { buffer: value.buffer, name: value.name || '' } : null);
+            };
+            request.onerror = () => { db.close(); reject(request.error || new Error('IndexedDB read error')); };
+        }));
+    }
+
+    function deleteCustomFont() {
+        return openFontDb().then(db => new Promise((resolve, reject) => {
+            const tx = db.transaction(FONT_DB_STORE, 'readwrite');
+            tx.objectStore(FONT_DB_STORE).delete('custom');
+            tx.oncomplete = () => { db.close(); resolve(); };
+            tx.onerror = () => { db.close(); reject(tx.error || new Error('IndexedDB delete error')); };
+        }));
+    }
+
+    // === КАСТОМИЗАЦИЯ: НАБОРЫ ИКОНОК ===
+    const ICON_PACK_NAMES = { noto: 'Noto', material: 'Material', pixel: 'Pixel' };
+
+    function applyIconPackUI() {
+        const valid = ['noto', 'material', 'pixel'].indexOf(settings.iconPack) !== -1 ? settings.iconPack : 'noto';
+        settings.iconPack = valid;
+        document.querySelectorAll('.icon-pack-card').forEach(card => {
+            const active = card.getAttribute('data-icon-pack') === valid;
+            card.classList.toggle('active', active);
+            card.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+        const current = document.getElementById('icon-pack-current');
+        if (current) current.innerText = ICON_PACK_NAMES[valid];
+        updateIconPackPreviews();
+    }
+
+    function updateIconPackPreviews() {
+        document.querySelectorAll('[data-icon-preview]').forEach(box => {
+            const pack = box.getAttribute('data-icon-preview');
+            box.innerHTML = iconMarkup(pack, 1, true) + iconMarkup(pack, 61, true);
+        });
+    }
+
+    function setIconPack(pack, btn) {
+        if (['noto', 'material', 'pixel'].indexOf(pack) === -1) pack = 'noto';
+        settings.iconPack = pack;
+        applyIconPackUI();
+        refreshWeatherIcons();
+        saveSettingsDebounced();
+        haptic(12);
+    }
+
+    function refreshWeatherIcons() {
+        const wIcon = document.getElementById('w-icon');
+        const h1 = document.getElementById('h-icon-1');
+        if (!wIcon || !h1) return;
+        if (lastWeather) {
+            wIcon.innerHTML = weatherEmoji(lastWeather.code, lastWeather.isDay);
+            const hourly = Array.isArray(lastWeather.hourly) ? lastWeather.hourly : [];
+            for (let i = 0; i < 4; i++) {
+                const el = document.getElementById('h-icon-' + (i + 1));
+                const item = hourly[i];
+                if (el && item) el.innerHTML = weatherEmoji(item.code, item.isDay);
+            }
+        } else {
+            wIcon.innerHTML = weatherEmoji(2, true);
+            ['1', '2', '3'].forEach(i => {
+                const el = document.getElementById('h-icon-' + i);
+                if (el) el.innerHTML = weatherEmoji(2, true);
+            });
+            const h4 = document.getElementById('h-icon-4');
+            if (h4) h4.innerHTML = weatherEmoji(0, false);
+        }
+    }
+
     // === ПЕРВИЧНАЯ ИНИЦИАЛИЗАЦИЯ ИНТЕРФЕЙСА ===
     window.addEventListener('DOMContentLoaded', () => {
         // Comfortaa встроена в HTML, поэтому внешние шрифты не запрашиваем:
@@ -5549,6 +6412,16 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                 const file = wallpaperInput.files && wallpaperInput.files[0];
                 handleWallpaperFile(file);
                 wallpaperInput.value = '';
+            });
+        }
+
+        // Свой шрифт в браузерной версии; в APK файл выбирается нативно
+        const fontInput = document.getElementById('font-file-input');
+        if (fontInput) {
+            fontInput.addEventListener('change', () => {
+                const file = fontInput.files && fontInput.files[0];
+                handleFontFileInput(file);
+                fontInput.value = '';
             });
         }
 
@@ -6016,7 +6889,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         partlyCloudy: 'data:image/png;base64,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'
     };
 
-    function weatherEmoji(code, isDay) {
+    function notoWeatherIcon(code, isDay) {
         const img = src => '<img class="weather-em-img" src="' + src + '" alt="" draggable="false">';
         if (code === 0) return img(isDay ? WEATHER_EMOJI_NOTO.sun : WEATHER_EMOJI_NOTO.moon);
         if (code === 1) return img(isDay ? WEATHER_EMOJI_NOTO.sunCloud : WEATHER_EMOJI_NOTO.moon);
@@ -6030,6 +6903,17 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         if (code >= 85 && code <= 86) return img(WEATHER_EMOJI_NOTO.snow);
         if (code >= 95) return img(WEATHER_EMOJI_NOTO.storm);
         return img(WEATHER_EMOJI_NOTO.cloud);
+    }
+
+    // Единая точка выбора набора: Noto, Material или Pixel.
+    function iconMarkup(pack, code, isDay) {
+        if (pack === 'material') return weatherIconSvg(code, isDay);
+        if (pack === 'pixel') return pixelWeatherSvg(code, isDay);
+        return notoWeatherIcon(code, isDay);
+    }
+
+    function weatherEmoji(code, isDay) {
+        return iconMarkup(settings.iconPack, code, isDay);
     }
 
     // Минималистичная иконка суток: круг, половина которого залита.
@@ -6067,6 +6951,111 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         if (code >= 85 && code <= 86) return wrap(cloud + snow);
         if (code >= 95) return wrap(cloud + '<path d="M13 19l-2 3h2.4L12 24.4"/>');
         return wrap(cloud);
+    }
+
+    // Пиксельный набор: 8-битные спрайты на сетке 16×16.
+    function pixelWeatherSvg(code, isDay) {
+        const sunColor = '#FFC83D';
+        const sunHi = '#FFE066';
+        const moonColor = '#FFE39A';
+        const moonShade = '#E8C56A';
+        const cloudColor = '#EEF5FD';
+        const cloudShade = '#C6D4E7';
+        const outline = '#93A8C1';
+        const rainColor = '#5FA8FF';
+        const snowColor = '#D6ECFF';
+        const fogColor = '#AFC0D6';
+        const stormColor = '#FFD43B';
+
+        const r = (x, y, w, h, color) =>
+            '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + color + '"/>';
+
+        const sun = [
+            r(7, 0, 2, 2, sunColor), r(7, 14, 2, 2, sunColor),
+            r(0, 7, 2, 2, sunColor), r(14, 7, 2, 2, sunColor),
+            r(2, 2, 2, 2, sunColor), r(12, 2, 2, 2, sunColor),
+            r(2, 12, 2, 2, sunColor), r(12, 12, 2, 2, sunColor),
+            r(6, 3, 4, 1, sunColor), r(5, 4, 6, 1, sunColor),
+            r(4, 5, 8, 6, sunColor), r(5, 11, 6, 1, sunColor), r(6, 12, 4, 1, sunColor),
+            r(5, 5, 2, 2, sunHi)
+        ].join('');
+
+        const sunSmall = [
+            r(6, 0, 2, 2, sunColor), r(6, 8, 2, 1, sunColor),
+            r(1, 6, 2, 2, sunColor), r(11, 6, 2, 2, sunColor),
+            r(2, 2, 2, 2, sunColor), r(10, 2, 2, 2, sunColor),
+            r(2, 10, 2, 2, sunColor), r(10, 10, 2, 2, sunColor),
+            r(5, 4, 5, 1, sunColor), r(4, 5, 7, 4, sunColor), r(5, 9, 5, 1, sunColor),
+            r(5, 5, 2, 2, sunHi)
+        ].join('');
+
+        const moon = [
+            r(8, 3, 3, 1, moonColor), r(6, 4, 5, 1, moonColor), r(5, 5, 4, 1, moonColor),
+            r(4, 6, 3, 1, moonColor), r(4, 7, 3, 1, moonColor), r(4, 8, 3, 1, moonColor),
+            r(5, 9, 4, 1, moonColor), r(6, 10, 5, 1, moonColor), r(8, 11, 3, 1, moonColor),
+            r(5, 6, 1, 3, moonShade), r(7, 9, 2, 1, moonShade)
+        ].join('');
+
+        const cloud = [
+            r(5, 5, 5, 1, outline), r(4, 6, 8, 1, outline), r(3, 7, 10, 1, outline),
+            r(2, 8, 12, 4, outline), r(3, 12, 10, 1, outline),
+            r(5, 6, 5, 1, cloudColor), r(4, 7, 8, 1, cloudColor),
+            r(3, 8, 10, 3, cloudColor), r(4, 11, 8, 1, cloudColor),
+            r(3, 8, 3, 2, '#FFFFFF'), r(4, 11, 8, 1, cloudShade)
+        ].join('');
+
+        const cloudSmall = [
+            r(7, 6, 5, 1, outline), r(6, 7, 8, 1, outline), r(5, 8, 10, 1, outline),
+            r(4, 9, 12, 3, outline), r(5, 12, 10, 1, outline),
+            r(7, 7, 5, 1, cloudColor), r(6, 8, 8, 1, cloudColor),
+            r(5, 9, 10, 2, cloudColor), r(6, 11, 8, 1, cloudColor),
+            r(5, 9, 3, 2, '#FFFFFF'), r(6, 11, 8, 1, cloudShade)
+        ].join('');
+
+        const cloudTiny = [
+            r(10, 7, 3, 1, outline), r(9, 8, 5, 1, outline),
+            r(8, 9, 8, 3, outline), r(9, 12, 6, 1, outline),
+            r(10, 8, 3, 1, cloudColor), r(9, 9, 6, 2, cloudColor),
+            r(10, 11, 4, 1, cloudColor),
+            r(9, 9, 2, 1, '#FFFFFF'), r(10, 11, 4, 1, cloudShade)
+        ].join('');
+
+        const rain = [
+            r(5, 13, 2, 3, rainColor), r(8, 14, 2, 2, rainColor), r(11, 13, 2, 3, rainColor)
+        ].join('');
+        const drizzle = [
+            r(6, 14, 1, 1, rainColor), r(9, 13, 1, 1, rainColor), r(12, 14, 1, 1, rainColor)
+        ].join('');
+        const snow = [
+            r(5, 13, 1, 3, snowColor), r(4, 14, 3, 1, snowColor),
+            r(9, 13, 1, 3, snowColor), r(8, 14, 3, 1, snowColor),
+            r(13, 13, 1, 3, snowColor), r(12, 14, 3, 1, snowColor)
+        ].join('');
+        const fog = [
+            r(3, 13, 10, 1, fogColor), r(5, 15, 8, 1, fogColor)
+        ].join('');
+        const bolt = [
+            r(8, 12, 3, 2, stormColor), r(7, 14, 3, 1, stormColor), r(9, 15, 2, 1, stormColor)
+        ].join('');
+        const star = [
+            r(13, 2, 1, 1, moonColor), r(12, 3, 3, 1, moonColor), r(13, 4, 1, 1, moonColor)
+        ].join('');
+
+        let body;
+        if (code === 0) body = isDay ? sun : moon + star;
+        else if (code === 1) body = (isDay ? sunSmall : moon) + cloudTiny;
+        else if (code === 2) body = (isDay ? sunSmall : moon) + cloudSmall;
+        else if (code === 3) body = cloud;
+        else if (code >= 45 && code <= 48) body = cloud + fog;
+        else if (code >= 51 && code <= 57) body = cloud + drizzle;
+        else if (code >= 61 && code <= 67) body = cloud + rain;
+        else if (code >= 71 && code <= 77) body = cloud + snow;
+        else if (code >= 80 && code <= 82) body = cloud + rain;
+        else if (code >= 85 && code <= 86) body = cloud + snow;
+        else if (code >= 95) body = cloud + bolt;
+        else body = cloud;
+
+        return '<svg class="weather-pixel" viewBox="0 0 16 16" aria-hidden="true" focusable="false" shape-rendering="crispEdges">' + body + '</svg>';
     }
 
     function weatherDesc(code, isDay) {
