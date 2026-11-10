@@ -7,6 +7,8 @@ Material You weather app for Android. The interface is a single `weather.html` f
 - Current weather, hourly forecast, and multi-day forecast.
 - City search and a list of popular cities.
 - Light and dark themes, multiple interface languages.
+- Unified customization: theme, Monet palette, icon ornament, custom fonts, and three weather icon sets.
+- Animated wavy sun track in the Sun card.
 - No ads and no sign-up.
 - Weather data: [Open-Meteo](https://open-meteo.com/).
 
@@ -16,6 +18,7 @@ Older versions are never deleted: every release stays available on GitHub.
 
 | Version | Date | Release |
 | --- | --- | --- |
+| 1.2 | November 10, 2026 | [v1.2](https://github.com/itzDrevQC/PixelWeather/releases/tag/v1.2) |
 | 1.1 | November 7, 2026 | [v1.1](https://github.com/itzDrevQC/PixelWeather/releases/tag/v1.1) |
 | 1.0 | November 6, 2026 | [v1.0](https://github.com/itzDrevQC/PixelWeather/releases/tag/v1.0) |
 
