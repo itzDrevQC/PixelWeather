@@ -18,6 +18,7 @@ Older versions are never deleted: every release stays available on GitHub.
 
 | Version | Date | Release |
 | --- | --- | --- |
+| 1.3 | November 19, 2026 | [v1.3](https://github.com/itzDrevQC/PixelWeather/releases/tag/v1.3) |
 | 1.2 | November 10, 2026 | [v1.2](https://github.com/itzDrevQC/PixelWeather/releases/tag/v1.2) |
 | 1.1 | November 7, 2026 | [v1.1](https://github.com/itzDrevQC/PixelWeather/releases/tag/v1.1) |
 | 1.0 | November 6, 2026 | [v1.0](https://github.com/itzDrevQC/PixelWeather/releases/tag/v1.0) |

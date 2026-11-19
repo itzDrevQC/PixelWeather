@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -3222,6 +3222,302 @@
         body.no-anim .changelog-card,
         body.no-anim .top-bar,
         body.no-anim .city-info.open { animation: none !important; }
+
+        /* ============================================================
+           PIXEL WEATHER 1.3 — EXPRESSIVE POLISH
+           ============================================================ */
+        :root {
+            --font-scale: 1;
+            --fs: var(--font-scale, 1);
+        }
+
+        /* --- ГОРОД: ОТДЕЛЬНАЯ СТРЕЛКА БЕЗ ОБВОДОК --- */
+        .city-cluster {
+            flex: 1 1 auto;
+            background: transparent;
+            box-shadow: none;
+            border-radius: 0;
+            gap: 5px;
+        }
+        .city-main {
+            flex: 0 1 auto;
+            width: fit-content;
+            min-width: min(150px, calc(100% - 45px));
+            border-radius: 28px 12px 12px 28px;
+            background: var(--md-surface-container-high);
+            padding: 0 16px 0 14px;
+            transition: background-color 0.22s var(--md-motion-standard),
+                border-radius 0.18s var(--md-motion-standard);
+        }
+        .city-main:hover { background: var(--md-surface-container-highest); }
+        .city-main:active { transform: none; background: var(--md-surface-container-highest); }
+        .city-main.city-info-open { border-radius: 28px; }
+        .city-arrow {
+            width: 48px;
+            flex: 0 0 48px;
+            border-left: none;
+            border-radius: 12px 28px 28px 12px;
+            background: var(--md-surface-container-high);
+            color: var(--md-on-surface-variant);
+            transition: background-color 0.22s var(--md-motion-standard),
+                border-radius 0.2s var(--md-motion-spring), color 0.22s var(--md-motion-standard);
+        }
+        .city-arrow:hover { background: var(--md-surface-container-highest); }
+        .city-arrow:active {
+            transform: none;
+            border-radius: 50% / 50%;
+            background: var(--md-surface-container-highest);
+        }
+        .city-arrow.open {
+            border-radius: 28px;
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+        }
+
+        @media (max-width: 380px) {
+            .city-main { padding: 0 12px; }
+            .city-arrow { width: 40px; flex-basis: 40px; }
+        }
+
+        /* Кнопки действий чуть компактнее — город получает больше места,
+           а стрелка уходит от центра к правому краю */
+        .top-bar .icon-btn { width: 42px; height: 42px; }
+        .actions { gap: 4px; }
+
+        /* --- ВЕРХНЯЯ ПАНЕЛЬ: СПОКОЙНЕЕ ПО ЦВЕТУ --- */
+        .top-bar .icon-btn {
+            background: var(--md-surface-container);
+            color: var(--md-on-surface-variant);
+            box-shadow: none;
+        }
+        .top-bar .icon-btn:hover {
+            background: var(--md-surface-container-high);
+            color: var(--md-on-surface);
+            transform: none;
+            box-shadow: none;
+        }
+        .top-bar .icon-btn.active {
+            background: var(--md-secondary-container);
+            color: var(--md-on-secondary-container);
+        }
+
+        /* --- КРУГЛЫЕ КНОПКИ СТАНОВЯТСЯ КВАДРАТНЫМИ ПРИ НАЖАТИИ --- */
+        .icon-btn,
+        .panel-close,
+        .modal-close,
+        .dev-avatar,
+        .search-capsule button,
+        .reset-btn,
+        .ob-next,
+        .ob-back,
+        .mini-action {
+            transition: transform 0.2s var(--md-motion-spring),
+                background-color 0.2s var(--md-motion-standard),
+                color 0.2s var(--md-motion-standard),
+                border-radius 0.16s var(--md-motion-standard);
+        }
+        .icon-btn:active,
+        .top-bar .icon-btn:active,
+        .panel-close:active,
+        .modal-close:active,
+        .dev-avatar:active,
+        .search-capsule button:active,
+        .reset-btn:active,
+        .ob-next:active,
+        .ob-back:active,
+        .mini-action:active {
+            border-radius: 12px;
+        }
+
+        /* --- ПАЛИТРА: ПОНЯТНЫЕ ЦВЕТОВЫЕ КРУЖКИ --- */
+        .color-seed,
+        .ob-seed {
+            background:
+                linear-gradient(135deg,
+                    hsl(var(--seed-h, 215), 78%, 76%) 0%,
+                    hsl(var(--seed-h, 215), 70%, 42%) 100%);
+            box-shadow: inset 0 0 0 1px hsla(var(--seed-h, 215), 45%, 30%, 0.14);
+            transition: box-shadow 0.2s var(--md-motion-standard),
+                border-color 0.2s var(--md-motion-standard);
+        }
+        .color-seed:hover {
+            transform: none;
+            box-shadow: inset 0 0 0 1px hsla(var(--seed-h, 215), 45%, 30%, 0.14),
+                0 0 0 3px hsla(var(--h), 50%, 50%, 0.16);
+        }
+        .color-seed.selected { transform: none; }
+        .ob-seed.selected { transform: none; }
+
+        /* --- ВЫБРАННЫЕ ЭЛЕМЕНТЫ НЕ СМЕЩАЮТСЯ ПРИ ПРОКРУТКЕ --- */
+        .hour-pill:hover .hour-icon,
+        .bento-tile:hover .tile-icon-circle { transform: none; }
+
+        /* --- ТЕКСТ ПОД ПОЛОСАМИ ВЕТРА И ВЛАЖНОСТИ ЧУТЬ НИЖЕ --- */
+        .bento-tile .md3-track + .tile-sub { margin-top: 7px; }
+
+        /* --- КНОПКА «НАЙТИ» БЛИЖЕ К ЦЕНТРУ --- */
+        .search-capsule button { margin-right: 7px; }
+
+        /* --- ИКОНКИ РАЗНЫХ НАБОРОВ ОДНОГО ВИЗУАЛЬНОГО РАЗМЕРА --- */
+        body[data-icon-pack="material"] .weather-emoji-big .weather-glyph,
+        body[data-icon-pack="material"] .hour-icon .weather-glyph {
+            transform: scale(1.14);
+        }
+
+        /* --- РАЗМЕР ТЕКСТА --- */
+        body { font-size: calc(16px * var(--fs)); }
+        .temp-big { font-size: calc(86px * var(--fs)); }
+        body.compact .temp-big { font-size: calc(70px * var(--fs)); }
+        .hero-range { font-size: calc(13px * var(--fs)); }
+        .date-badge { font-size: calc(12px * var(--fs)); }
+        #city-title { font-size: calc(15px * var(--fs)); }
+        .city-region { font-size: calc(10px * var(--fs)); line-height: calc(12px * var(--fs)); }
+        .hour-time { font-size: calc(12px * var(--fs)); }
+        .hour-temp { font-size: calc(16px * var(--fs)); }
+        .tile-top { font-size: calc(14px * var(--fs)); }
+        .tile-val { font-size: calc(30px * var(--fs)); }
+        body.compact .tile-val { font-size: calc(24px * var(--fs)); }
+        .tile-sub { font-size: calc(12px * var(--fs)); line-height: calc(16px * var(--fs)); }
+        .tile-unit { font-size: calc(12px * var(--fs)); }
+        .sun-times { font-size: calc(22px * var(--fs)); }
+        .sun-daylength,
+        .sun-labels { font-size: calc(11px * var(--fs)); }
+        .status-bar { font-size: calc(12px * var(--fs)); }
+        .condition-pill { font-size: calc(13px * var(--fs)); }
+
+        .panel-eyebrow { font-size: calc(11px * var(--fs)); }
+        .panel-title { font-size: calc(28px * var(--fs)); line-height: calc(36px * var(--fs)); }
+        .settings-tab { font-size: calc(14px * var(--fs)); line-height: calc(20px * var(--fs)); }
+        .settings-group-title { font-size: calc(13px * var(--fs)); line-height: calc(18px * var(--fs)); }
+        .setting-text span { font-size: calc(16px * var(--fs)); line-height: calc(24px * var(--fs)); }
+        .setting-text small { font-size: calc(12px * var(--fs)); line-height: calc(17px * var(--fs)); }
+        .setting-value { font-size: calc(12px * var(--fs)); line-height: calc(16px * var(--fs)); }
+        .settings-hint { font-size: calc(12px * var(--fs)); line-height: calc(17px * var(--fs)); }
+        .mini-segmented button { font-size: calc(11px * var(--fs)); }
+        .mini-action { font-size: calc(12px * var(--fs)); }
+        #hero-direction-seg button,
+        #hero-shape-seg button,
+        #octagon-seg button { font-size: calc(10px * var(--fs)); }
+        .wallpaper-name { font-size: calc(14px * var(--fs)); line-height: calc(20px * var(--fs)); }
+        .wallpaper-sub { font-size: calc(12px * var(--fs)); line-height: calc(16px * var(--fs)); }
+        .hue-label { font-size: calc(13px * var(--fs)); line-height: calc(18px * var(--fs)); }
+        .chroma-tab { font-size: calc(13px * var(--fs)); line-height: calc(18px * var(--fs)); }
+        .font-preview-sample { font-size: calc(22px * var(--fs)); line-height: calc(30px * var(--fs)); }
+        .font-preview-meta { font-size: calc(11px * var(--fs)); }
+        .icon-pack-card { font-size: calc(11px * var(--fs)); line-height: calc(14px * var(--fs)); }
+        .reset-btn { font-size: calc(14px * var(--fs)); }
+
+        .modal-title { font-size: calc(32px * var(--fs)); line-height: calc(40px * var(--fs)); }
+        .modal-sub { font-size: calc(16px * var(--fs)); line-height: calc(24px * var(--fs)); }
+        .search-capsule input { font-size: calc(16px * var(--fs)); line-height: calc(24px * var(--fs)); }
+        .search-capsule button { font-size: calc(14px * var(--fs)); line-height: calc(20px * var(--fs)); }
+        .city-tab { font-size: calc(13px * var(--fs)); }
+        .city-badge { font-size: calc(12px * var(--fs)); }
+        .city-list-title { font-size: calc(14px * var(--fs)); }
+        .city-card-name { font-size: calc(15px * var(--fs)); line-height: calc(20px * var(--fs)); }
+        .city-card-reg { font-size: calc(12px * var(--fs)); line-height: calc(16px * var(--fs)); }
+        .city-info-name { font-size: calc(19px * var(--fs)); }
+        .city-info-country { font-size: calc(11px * var(--fs)); }
+        .city-info-label { font-size: calc(10px * var(--fs)); }
+        .city-info-value { font-size: calc(12px * var(--fs)); }
+        .modal-foot { font-size: calc(11px * var(--fs)); }
+
+        .changelog-version { font-size: calc(22px * var(--fs)); }
+        .changelog-title { font-size: calc(15px * var(--fs)); }
+        .changelog-items { font-size: calc(13px * var(--fs)); line-height: calc(18px * var(--fs)); }
+        .changelog-date { font-size: calc(11px * var(--fs)); }
+        .wallpaper-check { font-size: calc(14px * var(--fs)); }
+        .about-row { font-size: calc(13px * var(--fs)); }
+        .dev-version { font-size: calc(11px * var(--fs)); }
+        .dev-name { font-size: calc(28px * var(--fs)); }
+        .dev-role { font-size: calc(11px * var(--fs)); }
+
+        .ob-title { font-size: calc(24px * var(--fs)); }
+        .ob-sub { font-size: calc(13px * var(--fs)); }
+        .ob-eyebrow { font-size: calc(11px * var(--fs)); }
+        .ob-lang { font-size: calc(15px * var(--fs)); }
+        .ob-theme button { font-size: calc(14px * var(--fs)); }
+        .ob-back { font-size: calc(14px * var(--fs)); }
+        .ob-next { font-size: calc(15px * var(--fs)); }
+
+        /* --- ВВОД HEX-ЦВЕТА --- */
+        .hex-color-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 4px 6px 4px 12px;
+            min-height: 44px;
+            border-radius: 14px;
+            background: var(--md-surface-container-high);
+            border: 1px solid transparent;
+            transition: border-color 0.2s var(--md-motion-standard),
+                background-color 0.2s var(--md-motion-standard);
+        }
+        .hex-color-row:focus-within {
+            border-color: var(--md-primary);
+            background: var(--md-surface-container-highest);
+        }
+        .hex-hash {
+            font-size: calc(15px * var(--fs));
+            font-weight: 600;
+            color: var(--md-on-surface-variant);
+        }
+        .hex-color-input {
+            flex: 1;
+            min-width: 0;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--md-on-surface);
+            font-family: var(--app-font), 'Roboto', system-ui, sans-serif;
+            font-size: calc(15px * var(--fs));
+            font-weight: 600;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+        }
+        .hex-color-input::placeholder {
+            color: var(--md-on-surface-variant);
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+
+        /* --- БОЛЬШЕ ПРУЖИННЫХ АНИМАЦИЙ M3 EXPRESSIVE --- */
+        @keyframes iconPop {
+            0% { opacity: 0.35; transform: scale(0.82) rotate(-7deg); }
+            62% { opacity: 1; transform: scale(1.07) rotate(2deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+        @keyframes swatchPop {
+            0% { transform: scale(0.88); }
+            62% { transform: scale(1.07); }
+            100% { transform: scale(1); }
+        }
+        @keyframes segmentPop {
+            0% { transform: scale(0.92); }
+            70% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        @keyframes tabUnderline {
+            from { transform: scaleX(0.2); opacity: 0; }
+            to { transform: scaleX(1); opacity: 1; }
+        }
+        .weather-emoji-big.icon-swap { animation: iconPop 0.5s var(--md-motion-spring) both; }
+        .settings-page.active > .settings-group {
+            animation: cardEnter 0.46s var(--md-motion-expressive) backwards;
+        }
+        .settings-page.active > .settings-group:nth-child(1) { animation-delay: 20ms; }
+        .settings-page.active > .settings-group:nth-child(2) { animation-delay: 50ms; }
+        .settings-page.active > .settings-group:nth-child(3) { animation-delay: 80ms; }
+        .settings-page.active > .settings-group:nth-child(4) { animation-delay: 110ms; }
+        .settings-page.active > .settings-group:nth-child(5) { animation-delay: 140ms; }
+        .settings-page.active > .settings-group:nth-child(6) { animation-delay: 170ms; }
+        .color-seed.selected { animation: swatchPop 0.36s var(--md-motion-spring); }
+        .mini-segmented button.active { animation: segmentPop 0.3s var(--md-motion-spring); }
+        .settings-tab.active::after {
+            transform-origin: center;
+            animation: tabUnderline 0.32s var(--md-motion-expressive);
+        }
     </style>
 </head>
 <body data-view="home">
@@ -3438,19 +3734,19 @@
         </div>
 
         <div class="palette-grid">
-            <div class="color-seed selected" data-hue="215" onclick="setMonet(215, this)" style="background: conic-gradient(#a8c7fa 0% 50%, #0b57d0 50% 75%, #d3e3fd 75% 100%);" title="Pixel Синий"></div>
-            <div class="color-seed" data-hue="140" onclick="setMonet(140, this)" style="background: conic-gradient(#a6f2ba 0% 50%, #146c2e 50% 75%, #d6f6dd 75% 100%);" title="Изумрудная Хвоя"></div>
-            <div class="color-seed" data-hue="270" onclick="setMonet(270, this)" style="background: conic-gradient(#e8b9ff 0% 50%, #6b1d9e 50% 75%, #f3d9ff 75% 100%);" title="Лаванда"></div>
-            <div class="color-seed" data-hue="40" onclick="setMonet(40, this)" style="background: conic-gradient(#ffdf9e 0% 50%, #7a5900 50% 75%, #ffefd0 75% 100%);" title="Золотой Песок"></div>
-            <div class="color-seed" data-hue="340" onclick="setMonet(340, this)" style="background: conic-gradient(#ffb2be 0% 50%, #8f002c 50% 75%, #ffd9df 75% 100%);" title="Сакура"></div>
-            <div class="color-seed" data-hue="15" onclick="setMonet(15, this)" style="background: conic-gradient(#ffb59d 0% 50%, #8f2800 50% 75%, #ffdbd0 75% 100%);" title="Терракота"></div>
+            <div class="color-seed selected" data-hue="215" onclick="setMonet(215, this)" style="--seed-h: 215;" title="Pixel Синий"></div>
+            <div class="color-seed" data-hue="140" onclick="setMonet(140, this)" style="--seed-h: 140;" title="Изумрудная Хвоя"></div>
+            <div class="color-seed" data-hue="270" onclick="setMonet(270, this)" style="--seed-h: 270;" title="Лаванда"></div>
+            <div class="color-seed" data-hue="40" onclick="setMonet(40, this)" style="--seed-h: 40;" title="Золотой Песок"></div>
+            <div class="color-seed" data-hue="340" onclick="setMonet(340, this)" style="--seed-h: 340;" title="Сакура"></div>
+            <div class="color-seed" data-hue="15" onclick="setMonet(15, this)" style="--seed-h: 15;" title="Терракота"></div>
             
-            <div class="color-seed" data-hue="175" onclick="setMonet(175, this)" style="background: conic-gradient(#8ef7e4 0% 50%, #006b5b 50% 75%, #c4fcef 75% 100%);" title="Кибер Мята"></div>
-            <div class="color-seed" data-hue="305" onclick="setMonet(305, this)" style="background: conic-gradient(#ffabf3 0% 50%, #801375 50% 75%, #ffd6f9 75% 100%);" title="Орхидея"></div>
-            <div class="color-seed" data-hue="85" onclick="setMonet(85, this)" style="background: conic-gradient(#cdf593 0% 50%, #3f6600 50% 75%, #e6fad1 75% 100%);" title="Чай Матча"></div>
-            <div class="color-seed" data-hue="0" onclick="setMonet(0, this)" style="background: conic-gradient(#ffb4ab 0% 50%, #93000a 50% 75%, #ffdad6 75% 100%);" title="Вишня"></div>
-            <div class="color-seed" data-hue="195" onclick="setMonet(195, this)" style="background: conic-gradient(#9eefff 0% 50%, #006879 50% 75%, #cff7ff 75% 100%);" title="Арктика"></div>
-            <div class="color-seed" data-hue="245" onclick="setMonet(245, this)" style="background: conic-gradient(#c3c0ff 0% 50%, #3f3b9e 50% 75%, #e1dfff 75% 100%);" title="Индиго"></div>
+            <div class="color-seed" data-hue="175" onclick="setMonet(175, this)" style="--seed-h: 175;" title="Кибер Мята"></div>
+            <div class="color-seed" data-hue="305" onclick="setMonet(305, this)" style="--seed-h: 305;" title="Орхидея"></div>
+            <div class="color-seed" data-hue="85" onclick="setMonet(85, this)" style="--seed-h: 85;" title="Чай Матча"></div>
+            <div class="color-seed" data-hue="0" onclick="setMonet(0, this)" style="--seed-h: 0;" title="Вишня"></div>
+            <div class="color-seed" data-hue="195" onclick="setMonet(195, this)" style="--seed-h: 195;" title="Арктика"></div>
+            <div class="color-seed" data-hue="245" onclick="setMonet(245, this)" style="--seed-h: 245;" title="Индиго"></div>
         </div>
 
         <div class="hue-slider-box">
@@ -3459,6 +3755,10 @@
                 <span id="hue-deg">215°</span>
             </div>
             <input type="range" min="0" max="360" value="215" class="hue-slider" id="hue-range" oninput="setCustomHue(this.value)">
+            <div class="hex-color-row">
+                <span class="hex-hash">#</span>
+                <input class="hex-color-input" id="hex-color-input" type="text" maxlength="7" placeholder="A8C7FA" autocomplete="off" spellcheck="false" aria-label="Код цвета HEX" oninput="onHexInput(this)" onchange="applyHexInput(this)" onkeypress="if(event.key==='Enter'){this.blur();}">
+            </div>
         </div>
         </div>
 
@@ -3584,6 +3884,17 @@
                 </div>
             </div>
 
+            <div class="range-block">
+                <div class="setting-row">
+                    <div class="setting-text">
+                        <span>Размер текста</span>
+                        <small>Масштаб подписей и заголовков</small>
+                    </div>
+                    <span class="setting-value" id="font-scale-val">100%</span>
+                </div>
+                <input class="md3-range" id="font-scale-range" type="range" min="85" max="125" step="5" value="100" oninput="setFontScale(this.value)">
+            </div>
+
             <div class="setting-row">
                 <div class="setting-text">
                     <span>Свой шрифт</span>
@@ -3595,7 +3906,6 @@
                 </div>
             </div>
             <input type="file" id="font-file-input" accept=".ttf,.otf,font/ttf,font/otf,application/x-font-ttf,application/x-font-opentype" style="display:none">
-            <div class="settings-hint" style="padding:0 0 12px">Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.</div>
         </div>
 
         <div class="settings-group">
@@ -3624,7 +3934,6 @@
                 <span class="setting-value" id="icon-pack-current">Noto</span>
             </div>
 
-            <div class="settings-hint" style="padding:0 0 12px">Набор применяется к большой иконке и почасовому прогнозу.</div>
         </div>
 
     </div>
@@ -3831,7 +4140,7 @@
                 <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
                 drev.qc@gmail.com
             </a>
-            <div class="dev-version">Pixel Weather • Material You 1.2</div>
+            <div class="dev-version">Pixel Weather • Material You 1.3</div>
         </div>
 
         <div class="settings-group">
@@ -3839,7 +4148,7 @@
             <div class="about-row"><span>Данные</span><strong>Open-Meteo</strong></div>
             <div class="about-row"><span>Дизайн</span><strong>Material Design 3</strong></div>
             <div class="about-row"><span>Палитра</span><strong>Monet + обои</strong></div>
-            <div class="about-row"><span>Версия</span><strong>1.2</strong></div>
+            <div class="about-row"><span>Версия</span><strong>1.3</strong></div>
         </div>
     </div>
 </div>
@@ -4042,6 +4351,8 @@
         rayRound: 100,           // 0..100% — скругление кончиков лучей
         fontChoice: 'comfortaa', // comfortaa | system | custom
         fontName: '',            // имя загруженного TTF/OTF
+        fontScale: 100,          // 85..125% — масштаб текста интерфейса
+        hex: '',                 // точный HEX-код, введённый в палитре
         iconPack: 'noto',        // noto | material | pixel
         lang: 'en',              // язык интерфейса (I18N_LANGS); при первом запуске — английский
         onboarded: false         // первичная настройка (язык → тема → город) пройдена
@@ -4369,11 +4680,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'TTF или OTF, до 10 МБ': 'TTF or OTF, up to 10 MB',
             'Загрузить': 'Upload',
             'Удалить': 'Remove',
-            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'The font applies to the whole interface and is stored on your device. The file is never uploaded.',
             'Иконки погоды': 'Weather icons',
             'Набор': 'Set',
             'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — color emoji, Material — outline, Pixel — 8-bit',
-            'Набор применяется к большой иконке и почасовому прогнозу.': 'The set applies to the main icon and hourly forecast.',
             'Не удалось загрузить шрифт': 'Could not load the font',
             'Шрифт применён': 'Font applied',
             'Свой шрифт удалён': 'Custom font removed',
@@ -4397,11 +4706,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'TTF или OTF, до 10 МБ': 'TTF oder OTF, bis 10 MB',
             'Загрузить': 'Laden',
             'Удалить': 'Entfernen',
-            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'Die Schriftart gilt für die gesamte Oberfläche und wird auf dem Gerät gespeichert. Die Datei wird nie hochgeladen.',
             'Иконки погоды': 'Wettersymbole',
             'Набор': 'Satz',
             'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — farbige Emojis, Material — Kontur, Pixel — 8-Bit',
-            'Набор применяется к большой иконке и почасовому прогнозу.': 'Der Satz gilt für das Hauptsymbol und die Stundenprognose.',
             'Не удалось загрузить шрифт': 'Schriftart konnte nicht geladen werden',
             'Шрифт применён': 'Schriftart angewendet',
             'Свой шрифт удалён': 'Eigene Schriftart entfernt',
@@ -4425,11 +4732,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'TTF или OTF, до 10 МБ': 'TTF u OTF, hasta 10 MB',
             'Загрузить': 'Cargar',
             'Удалить': 'Quitar',
-            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'La fuente se aplica a toda la interfaz y se guarda en el dispositivo. El archivo nunca se sube.',
             'Иконки погоды': 'Iconos del clima',
             'Набор': 'Conjunto',
             'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — emojis de color, Material — contorno, Pixel — 8 bits',
-            'Набор применяется к большой иконке и почасовому прогнозу.': 'El conjunto se aplica al icono principal y al pronóstico por horas.',
             'Не удалось загрузить шрифт': 'No se pudo cargar la fuente',
             'Шрифт применён': 'Fuente aplicada',
             'Свой шрифт удалён': 'Fuente personalizada eliminada',
@@ -4453,11 +4758,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'TTF или OTF, до 10 МБ': 'TTF ou OTF, jusqu’à 10 MB',
             'Загрузить': 'Charger',
             'Удалить': 'Supprimer',
-            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'La police s’applique à toute l’interface et est stockée sur l’appareil. Le fichier n’est jamais envoyé.',
             'Иконки погоды': 'Icônes météo',
             'Набор': 'Jeu',
             'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — emojis couleur, Material — contour, Pixel — 8 bits',
-            'Набор применяется к большой иконке и почасовому прогнозу.': 'Le jeu s’applique à l’icône principale et aux prévisions horaires.',
             'Не удалось загрузить шрифт': 'Impossible de charger la police',
             'Шрифт применён': 'Police appliquée',
             'Свой шрифт удалён': 'Police personnalisée supprimée',
@@ -4481,11 +4784,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'TTF или OTF, до 10 МБ': 'TTF o OTF, fino a 10 MB',
             'Загрузить': 'Carica',
             'Удалить': 'Rimuovi',
-            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'Il carattere si applica a tutta l’interfaccia ed è salvato sul dispositivo. Il file non viene mai caricato.',
             'Иконки погоды': 'Icone meteo',
             'Набор': 'Set',
             'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — emoji a colori, Material — contorno, Pixel — 8 bit',
-            'Набор применяется к большой иконке и почасовому прогнозу.': 'Il set si applica all’icona principale e alle previsioni orarie.',
             'Не удалось загрузить шрифт': 'Impossibile caricare il carattere',
             'Шрифт применён': 'Carattere applicato',
             'Свой шрифт удалён': 'Carattere personalizzato rimosso',
@@ -4509,11 +4810,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'TTF или OTF, до 10 МБ': 'TTF ou OTF, até 10 MB',
             'Загрузить': 'Carregar',
             'Удалить': 'Remover',
-            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'A fonte é aplicada a toda a interface e fica armazenada no dispositivo. O arquivo nunca é enviado.',
             'Иконки погоды': 'Ícones do clima',
             'Набор': 'Conjunto',
             'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — emojis coloridos, Material — contorno, Pixel — 8 bits',
-            'Набор применяется к большой иконке и почасовому прогнозу.': 'O conjunto é aplicado ao ícone principal e à previsão por hora.',
             'Не удалось загрузить шрифт': 'Não foi possível carregar a fonte',
             'Шрифт применён': 'Fonte aplicada',
             'Свой шрифт удалён': 'Fonte personalizada removida',
@@ -4537,11 +4836,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'TTF или OTF, до 10 МБ': 'TTF 或 OTF，最大 10 MB',
             'Загрузить': '上传',
             'Удалить': '删除',
-            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': '字体会应用于整个界面并保存在设备上。文件不会上传到网络。',
             'Иконки погоды': '天气图标',
             'Набор': '图标集',
             'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — 彩色表情，Material — 线条，Pixel — 8 位',
-            'Набор применяется к большой иконке и почасовому прогнозу.': '图标集会应用于主图标和逐小时预报。',
             'Не удалось загрузить шрифт': '无法加载字体',
             'Шрифт применён': '字体已应用',
             'Свой шрифт удалён': '已移除自定义字体',
@@ -4565,11 +4862,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'TTF или OTF, до 10 МБ': 'TTF または OTF、最大 10 MB',
             'Загрузить': 'アップロード',
             'Удалить': '削除',
-            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'フォントはインターフェース全体に適用され、端末に保存されます。ファイルは外部に送信されません。',
             'Иконки погоды': '天気アイコン',
             'Набор': 'セット',
             'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — カラー絵文字、Material — アウトライン、Pixel — 8 ビット',
-            'Набор применяется к большой иконке и почасовому прогнозу.': 'セットはメインアイコンと時間ごとの予報に適用されます。',
             'Не удалось загрузить шрифт': 'フォントを読み込めませんでした',
             'Шрифт применён': 'フォントを適用しました',
             'Свой шрифт удалён': 'カスタムフォントを削除しました',
@@ -4593,11 +4888,9 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'TTF или OTF, до 10 МБ': 'TTF veya OTF, 10 MB’a kadar',
             'Загрузить': 'Yükle',
             'Удалить': 'Kaldır',
-            'Шрифт применяется ко всему интерфейсу и сохраняется на устройстве. Файл не загружается в интернет.': 'Yazı tipi tüm arayüze uygulanır ve cihazda saklanır. Dosya asla internete yüklenmez.',
             'Иконки погоды': 'Hava durumu simgeleri',
             'Набор': 'Set',
             'Noto — цветные эмодзи, Material — контурные, Pixel — 8-бит': 'Noto — renkli emoji, Material — kontur, Pixel — 8 bit',
-            'Набор применяется к большой иконке и почасовому прогнозу.': 'Set ana simgeye ve saatlik tahmine uygulanır.',
             'Не удалось загрузить шрифт': 'Yazı tipi yüklenemedi',
             'Шрифт применён': 'Yazı tipi uygulandı',
             'Свой шрифт удалён': 'Özel yazı tipi kaldırıldı',
@@ -4607,6 +4900,56 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             'Шрифт не найден на устройстве': 'Yazı tipi cihazda bulunamadı',
             'Форма применяется ко всем карточкам приложения. «Глубина» управляет тенями, «Скругление» — радиусом, а число углов превращает прямоугольники в фигурные панели. Настройки 8 углов появляются, когда выбран режим «8».': 'Şekil uygulamadaki tüm kartlara uygulanır. «Derinlik» gölgeleri, «Yuvarlaklık» yarıçapı kontrol eder; köşe sayısı dikdörtgenleri biçimli panellere dönüştürür. 8 köşe ayarları «8» seçildiğinde görünür.',
             'Фигурка меняет вращающийся элемент вокруг смайлика погоды; параметры лучей действуют для формы «Лучи».': 'Figür, hava durumu emojisinin etrafındaki dönen öğeyi değiştirir; ışın ayarları «Işınlar» şekli için geçerlidir.'
+        }
+    };
+
+    // Новые строки v1.3: размер текста и HEX-код палитры.
+    const I18N_V13 = {
+        ru: {},
+        en: {
+            'Размер текста': 'Text size',
+            'Масштаб подписей и заголовков': 'Scale for labels and headings',
+            'Код цвета HEX': 'HEX color code'
+        },
+        de: {
+            'Размер текста': 'Textgröße',
+            'Масштаб подписей и заголовков': 'Skalierung für Beschriftungen und Überschriften',
+            'Код цвета HEX': 'HEX-Farbcode'
+        },
+        es: {
+            'Размер текста': 'Tamaño del texto',
+            'Масштаб подписей и заголовков': 'Escala de etiquetas y títulos',
+            'Код цвета HEX': 'Código de color HEX'
+        },
+        fr: {
+            'Размер текста': 'Taille du texte',
+            'Масштаб подписей и заголовков': 'Échelle des libellés et des titres',
+            'Код цвета HEX': 'Code couleur HEX'
+        },
+        it: {
+            'Размер текста': 'Dimensione testo',
+            'Масштаб подписей и заголовков': 'Scala di etichette e titoli',
+            'Код цвета HEX': 'Codice colore HEX'
+        },
+        pt: {
+            'Размер текста': 'Tamanho do texto',
+            'Масштаб подписей и заголовков': 'Escala de rótulos e títulos',
+            'Код цвета HEX': 'Código de cor HEX'
+        },
+        zh: {
+            'Размер текста': '文字大小',
+            'Масштаб подписей и заголовков': '标签和标题的缩放',
+            'Код цвета HEX': 'HEX 颜色代码'
+        },
+        ja: {
+            'Размер текста': '文字サイズ',
+            'Масштаб подписей и заголовков': 'ラベルと見出しの倍率',
+            'Код цвета HEX': 'HEX カラーコード'
+        },
+        tr: {
+            'Размер текста': 'Metin boyutu',
+            'Масштаб подписей и заголовков': 'Etiket ve başlık ölçeği',
+            'Код цвета HEX': 'HEX renk kodu'
         }
     };
 
@@ -4651,16 +4994,39 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         }
     };
 
-    const APP_VERSION = '1.2';
+    const APP_VERSION = '1.3';
 
     const CHANGELOG_I18N = {
         ru: {
             current: 'Текущая',
             versions: [
                 {
+                    version: '1.3',
+                    date: '19 ноября 2026',
+                    current: true,
+                    title: 'Тонкая настройка',
+                    items: [
+                        'Лучи вокруг иконки больше не увеличиваются при смене набора иконок',
+                        'Стрелка города стала отдельной кнопкой с мягким овальным откликом',
+                        'Размер текста настраивается прямо в разделе «Шрифт»',
+                        'Больше пружинных анимаций Material 3 Expressive',
+                        'В палитру добавлен ввод цвета по HEX-коду',
+                        'Кнопка «Найти» сдвинута ближе к центру',
+                        'Цветовые кружки палитры стали понятнее',
+                        'Слайдеры и выбранные элементы не смещаются при прокрутке',
+                        'Кнопки стали спокойнее по цвету',
+                        'Авто-тема теперь берёт режим из настроек устройства',
+                        'Стрелка города отделена от названия, обводки убраны',
+                        'Верхняя панель стала компактнее: город и стрелка выровнены, лишние отступы убраны',
+                        '«Использовать обои» теперь использует accent-цвет Material You, а если система не отдала цвет — предлагает выбрать фото',
+                        'Назад из настроек, кастомизации и «Что нового» возвращает к погоде',
+                        'Круглые кнопки становятся квадратными при нажатии'
+                    ]
+                },
+                {
                     version: '1.2',
                     date: '10 ноября 2026',
-                    current: true,
+                    current: false,
                     title: 'Шрифты и иконки',
                     items: [
                         'Своя типографика: загрузите TTF или OTF — шрифт применится ко всему интерфейсу',
@@ -4702,9 +5068,32 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             current: 'Current',
             versions: [
                 {
+                    version: '1.3',
+                    date: 'November 19, 2026',
+                    current: true,
+                    title: 'Fine tuning',
+                    items: [
+                        'Rays around the icon no longer grow when switching icon sets',
+                        'The city arrow is now a separate button with a soft oval press response',
+                        'Text size can be adjusted right in the Font section',
+                        'More Material 3 Expressive spring animations',
+                        'Added HEX color code input to the palette',
+                        'The Search button moved closer to the center',
+                        'Palette color swatches are clearer',
+                        'Sliders and selected items no longer shift while scrolling',
+                        'Buttons are calmer in color',
+                        'Auto theme now follows the device setting',
+                        'The city arrow is separated from the name, outlines removed',
+                        'A more compact top bar: city and arrow aligned, extra spacing removed',
+                        'Use wallpaper now falls back to the Material You accent color and offers a photo picker when the system returns no color',
+                        'Back from settings, customization, and What’s new returns to the weather screen',
+                        'Round buttons become square while pressed'
+                    ]
+                },
+                {
                     version: '1.2',
                     date: 'November 10, 2026',
-                    current: true,
+                    current: false,
                     title: 'Fonts and icons',
                     items: [
                         'Your own typography: upload a TTF or OTF and the font applies to the whole interface',
@@ -4768,6 +5157,8 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         if (extra && typeof extra[source] === 'string' && extra[source]) return extra[source];
         const v12 = I18N_V12[currentLang];
         if (v12 && typeof v12[source] === 'string' && v12[source]) return v12[source];
+        const v13 = I18N_V13[currentLang];
+        if (v13 && typeof v13[source] === 'string' && v13[source]) return v13[source];
         const shortDistricts = I18N_DISTRICT_SHORT[currentLang];
         if (shortDistricts && typeof shortDistricts[source] === 'string' && shortDistricts[source]) return shortDistricts[source];
         const dict = I18N[currentLang];
@@ -4919,6 +5310,10 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                 ? saved.fontChoice
                 : DEFAULT_SETTINGS.fontChoice;
             const fontName = typeof saved.fontName === 'string' ? saved.fontName.slice(0, 140) : '';
+            const fontScale = Number(saved.fontScale);
+            const hex = (typeof saved.hex === 'string' && /^[0-9a-f]{3}$|^[0-9a-f]{6}$/i.test(saved.hex))
+                ? saved.hex.toUpperCase()
+                : '';
             const iconPack = ['noto', 'material', 'pixel'].indexOf(saved.iconPack) !== -1
                 ? saved.iconPack
                 : DEFAULT_SETTINGS.iconPack;
@@ -4979,6 +5374,10 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                     : DEFAULT_SETTINGS.rayRound,
                 fontChoice: fontChoice,
                 fontName: fontName,
+                fontScale: Number.isFinite(fontScale)
+                    ? Math.min(125, Math.max(85, Math.round(fontScale / 5) * 5))
+                    : DEFAULT_SETTINGS.fontScale,
+                hex: hex,
                 iconPack: iconPack,
                 lang: lang,
                 onboarded: onboarded
@@ -5026,6 +5425,8 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                 rayRound: settings.rayRound,
                 fontChoice: settings.fontChoice,
                 fontName: settings.fontName,
+                fontScale: settings.fontScale,
+                hex: settings.hex,
                 iconPack: settings.iconPack,
                 lang: currentLang,
                 onboarded: settings.onboarded
@@ -5099,7 +5500,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
 
     // Обратный поиск исходной строки, чтобы статус переводился при смене языка
     function statusSourceOf(text) {
-        for (const dict of [I18N_V12[currentLang], I18N_EXTRA[currentLang]]) {
+        for (const dict of [I18N_V13[currentLang], I18N_V12[currentLang], I18N_EXTRA[currentLang]]) {
             if (!dict) continue;
             for (const key in dict) {
                 if (dict[key] === text) return key;
@@ -5135,12 +5536,36 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
     // === ТЕМА: СВЕТЛАЯ / ТЁМНАЯ / КАК В СИСТЕМЕ ===
     const darkSchemeQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
 
+    function systemPrefersDark() {
+        // В APK WebView наследует светлую тему Activity, поэтому спрашиваем
+        // реальный режим устройства через нативный мост.
+        if (window.Android && typeof window.Android.getSystemTheme === 'function') {
+            try { return window.Android.getSystemTheme() === 'dark'; } catch (e) {}
+        }
+        return !!(darkSchemeQuery && darkSchemeQuery.matches);
+    }
+
     function applyThemeMode() {
         const isDark = settings.themeMode === 'dark'
-            || (settings.themeMode === 'system' && darkSchemeQuery && darkSchemeQuery.matches);
+            || (settings.themeMode === 'system' && systemPrefersDark());
         document.body.classList.toggle('dark', isDark);
         // Иконка солнца/луны переключается через CSS: body.dark .icon-moon / .icon-sun
         updateThemeColor();
+    }
+
+    window.onAndroidThemeChanged = function() {
+        if (settings.themeMode === 'system') applyThemeMode();
+    };
+
+    if (darkSchemeQuery) {
+        const onSchemeChange = () => {
+            if (settings.themeMode === 'system') applyThemeMode();
+        };
+        if (typeof darkSchemeQuery.addEventListener === 'function') {
+            darkSchemeQuery.addEventListener('change', onSchemeChange);
+        } else if (typeof darkSchemeQuery.addListener === 'function') {
+            darkSchemeQuery.addListener(onSchemeChange);
+        }
     }
 
     function setThemeMode(mode, btn) {
@@ -5179,6 +5604,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
     function setHueFromWallpaper(hue) {
         const normalized = ((Math.round(Number(hue)) % 360) + 360) % 360;
         settings.wallpaperHue = Number.isFinite(normalized) ? normalized : DEFAULT_SETTINGS.hue;
+        settings.hex = '';
         document.documentElement.style.setProperty('--h', settings.wallpaperHue);
         const range = document.getElementById('hue-range');
         const deg = document.getElementById('hue-deg');
@@ -5186,6 +5612,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         if (deg) deg.innerText = settings.wallpaperHue + '°';
         document.querySelectorAll('.color-seed').forEach(c => c.classList.remove('selected'));
         updateThemeColor();
+        syncHexInput();
     }
 
     function applyWallpaperColor(notify) {
@@ -5197,34 +5624,51 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                     updateWallpaperUI();
                     saveSettingsDebounced();
                     if (notify) setStatus(t('Палитра подстроена под обои системы'));
-                    return;
+                    return true;
                 }
             } catch (e) {}
 
-            // В APK не открываем файловый диалог: используем последний удачный цвет
+            // Если прошивка не отдала цвет обоев, по нажатию предлагаем фото.
+            if (notify) {
+                const input = document.getElementById('wallpaper-input');
+                if (input) {
+                    setStatus(t('Нажмите, чтобы выбрать фото обоев'));
+                    input.click();
+                    return false;
+                }
+            }
+
             if (settings.wallpaperHue !== null) {
                 setHueFromWallpaper(settings.wallpaperHue);
                 updateWallpaperUI();
                 if (notify) setStatus(t('Использован последний цвет обоев'));
-            } else {
-                updateWallpaperUI();
-                if (notify) setStatus(t('Не удалось определить цвет обоев'));
+                return true;
             }
-            return;
+
+            updateWallpaperUI();
+            if (notify) setStatus(t('Не удалось определить цвет обоев'));
+            return false;
+        }
+
+        // В браузере нажатие всегда открывает выбор фото,
+        // чтобы можно было заменить уже выбранные обои.
+        if (notify) {
+            const input = document.getElementById('wallpaper-input');
+            if (input) {
+                setStatus(t('Нажмите, чтобы выбрать фото обоев'));
+                input.click();
+                return false;
+            }
         }
 
         if (settings.wallpaperHue !== null) {
             setHueFromWallpaper(settings.wallpaperHue);
             updateWallpaperUI();
-            if (notify) setStatus(t('Палитра подстроена под выбранное фото'));
-            return;
+            return true;
         }
 
         updateWallpaperUI();
-        if (notify) {
-            const input = document.getElementById('wallpaper-input');
-            if (input) input.click();
-        }
+        return false;
     }
 
     function applyWallpaperIfEnabled() {
@@ -5232,10 +5676,17 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
     }
 
     function useWallpaperColors() {
-        settings.colorSource = 'wallpaper';
-        updateWallpaperUI();
-        applyWallpaperColor(true);
-        saveSettingsDebounced();
+        const previousSource = settings.colorSource;
+        const applied = applyWallpaperColor(true);
+        if (applied) {
+            settings.colorSource = 'wallpaper';
+            updateWallpaperUI();
+            saveSettingsDebounced();
+        } else {
+            // Если открылся выбор фото, режим включится после успешного выбора.
+            settings.colorSource = previousSource;
+            updateWallpaperUI();
+        }
     }
 
     function extractWallpaperHue(pixels) {
@@ -5720,6 +6171,32 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         setView('home');
     }
 
+    // Нативная кнопка/жест «назад» сначала закрывает экраны приложения.
+    function handleAndroidBack() {
+        const onboarding = document.getElementById('onboarding');
+        if (onboarding && onboarding.classList.contains('visible')) return false;
+
+        const cityModal = document.getElementById('city-modal');
+        if (cityModal && !cityModal.classList.contains('hidden')) {
+            closeCityModal();
+            return true;
+        }
+
+        const cityInfo = document.getElementById('city-info');
+        if (cityInfo && cityInfo.classList.contains('open')) {
+            closeCityInfo();
+            return true;
+        }
+
+        const view = document.body.getAttribute('data-view') || 'home';
+        if (view !== 'home') {
+            setView('home');
+            return true;
+        }
+        return false;
+    }
+    window.handleAndroidBack = handleAndroidBack;
+
     function toggleSettingsPanel() {
         setView('settings');
     }
@@ -5748,12 +6225,15 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             const badge = release.current
                 ? '<span class="changelog-badge">' + pack.current + '</span>'
                 : '';
+            const date = release.date
+                ? '<span class="changelog-date">' + release.date + '</span>'
+                : '';
             const items = (release.items || []).map(item => '<li>' + item + '</li>').join('');
             return '<article class="changelog-card' + (release.current ? ' current' : '') + '" style="--n:' + index + '">' +
                 '<div class="changelog-top">' +
                     '<span class="changelog-version">' + release.version + '</span>' +
                     badge +
-                    '<span class="changelog-date">' + release.date + '</span>' +
+                    date +
                 '</div>' +
                 '<div class="changelog-title">' + release.title + '</div>' +
                 '<ul class="changelog-items">' + items + '</ul>' +
@@ -5769,6 +6249,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         }
         const panel = document.getElementById('city-info');
         const button = document.getElementById('city-arrow-btn');
+        const main = document.getElementById('city-main-btn');
         if (!panel) return;
 
         const willOpen = !panel.classList.contains('open');
@@ -5784,11 +6265,13 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             button.classList.toggle('open', willOpen);
             button.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
         }
+        if (main) main.classList.toggle('city-info-open', willOpen);
     }
 
     function closeCityInfo() {
         const panel = document.getElementById('city-info');
         const button = document.getElementById('city-arrow-btn');
+        const main = document.getElementById('city-main-btn');
         if (panel) {
             panel.classList.remove('open');
             panel.setAttribute('aria-hidden', 'true');
@@ -5797,6 +6280,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             button.classList.remove('open');
             button.setAttribute('aria-expanded', 'false');
         }
+        if (main) main.classList.remove('city-info-open');
     }
 
     document.addEventListener('click', event => {
@@ -5981,9 +6465,11 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
 
         // Ручной выбор всегда отключает режим «из обоев»
         settings.colorSource = 'manual';
+        settings.hex = '';
         updateWallpaperUI();
 
         updateThemeColor();
+        syncHexInput();
         saveSettingsDebounced();
     }
 
@@ -5993,15 +6479,115 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         document.querySelectorAll('.color-seed').forEach(c => c.classList.remove('selected'));
 
         settings.colorSource = 'manual';
+        settings.hex = '';
         updateWallpaperUI();
 
         updateThemeColor();
+        syncHexInput();
         saveSettingsDebounced();
+    }
+
+    // === HEX-КОД ЦВЕТА В ПАЛИТРЕ ===
+    function hslToHex(h, s, l) {
+        const hue = ((Number(h) % 360) + 360) % 360;
+        const sat = Math.min(100, Math.max(0, Number(s))) / 100;
+        const light = Math.min(100, Math.max(0, Number(l))) / 100;
+        const c = (1 - Math.abs(2 * light - 1)) * sat;
+        const x = c * (1 - Math.abs(((hue / 60) % 2) - 1));
+        const m = light - c / 2;
+        let r = 0, g = 0, b = 0;
+        if (hue < 60) { r = c; g = x; }
+        else if (hue < 120) { r = x; g = c; }
+        else if (hue < 180) { g = c; b = x; }
+        else if (hue < 240) { g = x; b = c; }
+        else if (hue < 300) { r = x; b = c; }
+        else { r = c; b = x; }
+        const toHex = v => Math.round((v + m) * 255).toString(16).padStart(2, '0');
+        return (toHex(r) + toHex(g) + toHex(b)).toUpperCase();
+    }
+
+    function hexToHsl(value) {
+        let clean = String(value || '').trim().replace(/^#/, '');
+        if (!/^[0-9a-f]{3}$|^[0-9a-f]{6}$/i.test(clean)) return null;
+        if (clean.length === 3) clean = clean.split('').map(ch => ch + ch).join('');
+
+        const r = parseInt(clean.slice(0, 2), 16) / 255;
+        const g = parseInt(clean.slice(2, 4), 16) / 255;
+        const b = parseInt(clean.slice(4, 6), 16) / 255;
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        const l = (max + min) / 2;
+        let h = 0;
+        let s = 0;
+
+        if (max !== min) {
+            const d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+            else if (max === g) h = (b - r) / d + 2;
+            else h = (r - g) / d + 4;
+            h *= 60;
+        }
+
+        return { h: Math.round(h), s: Math.round(s * 100), l: Math.round(l * 100) };
+    }
+
+    function syncHexInput() {
+        const input = document.getElementById('hex-color-input');
+        if (!input) return;
+        if (settings.hex) {
+            input.value = settings.hex;
+            return;
+        }
+        const style = document.documentElement.style;
+        const hue = Number(style.getPropertyValue('--h'));
+        const sat = parseFloat(style.getPropertyValue('--s'));
+        if (!Number.isFinite(hue)) return;
+        input.value = hslToHex(hue, Number.isFinite(sat) ? sat : 75, 55);
+    }
+
+    function applyHueFromHex(value, normalize) {
+        const parsed = hexToHsl(value);
+        if (!parsed) {
+            if (normalize) syncHexInput();
+            return false;
+        }
+
+        document.documentElement.style.setProperty('--h', parsed.h);
+        settings.hex = String(value).replace(/^#/, '').toUpperCase();
+        const range = document.getElementById('hue-range');
+        const deg = document.getElementById('hue-deg');
+        if (range) range.value = parsed.h;
+        if (deg) deg.innerText = parsed.h + '°';
+        document.querySelectorAll('.color-seed, .ob-seed').forEach(c => c.classList.remove('selected'));
+
+        settings.colorSource = 'manual';
+        updateWallpaperUI();
+        updateThemeColor();
+        saveSettingsDebounced();
+        if (normalize) syncHexInput();
+        return true;
+    }
+
+    function onHexInput(input) {
+        const clean = String(input.value || '').replace(/^#/, '').replace(/[^0-9a-f]/gi, '').slice(0, 6);
+        if (clean !== input.value) input.value = clean;
+        if (clean.length === 6) applyHueFromHex(clean, false);
+    }
+
+    function applyHexInput(input) {
+        const clean = String(input.value || '').replace(/^#/, '').replace(/[^0-9a-f]/gi, '').slice(0, 6);
+        if (clean.length === 3 || clean.length === 6) {
+            if (applyHueFromHex(clean, false)) input.value = clean.toUpperCase();
+        } else {
+            syncHexInput();
+        }
     }
 
     function setChroma(satAccent, satBg, btn) {
         document.documentElement.style.setProperty('--s', satAccent);
         document.documentElement.style.setProperty('--s-bg', satBg);
+        settings.hex = '';
 
         const tabs = Array.from(document.querySelectorAll('.chroma-tab'));
         tabs.forEach(t => t.classList.remove('active'));
@@ -6010,6 +6596,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             currentChroma = tabs.indexOf(btn);
         }
         updateThemeColor();
+        syncHexInput();
         saveSettingsDebounced();
     }
 
@@ -6061,8 +6648,10 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
 
         // Кастомизация: шрифт и набор иконок
         applyFontChoice(settings.fontChoice, false);
+        applyFontScale(settings.fontScale, false);
         applyIconPackUI();
         refreshWeatherIcons();
+        syncHexInput();
 
         const refreshHint = document.getElementById('refresh-hint');
         if (refreshHint) updateRefreshHint();
@@ -6175,6 +6764,27 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
                 button.classList.toggle('active', button.getAttribute('data-font') === settings.fontChoice);
             });
         }
+    }
+
+    // === КАСТОМИЗАЦИЯ: РАЗМЕР ТЕКСТА ===
+    function applyFontScale(value, persist) {
+        const numeric = Number(value);
+        const scale = Number.isFinite(numeric)
+            ? Math.min(125, Math.max(85, Math.round(numeric / 5) * 5))
+            : DEFAULT_SETTINGS.fontScale;
+        settings.fontScale = scale;
+        document.documentElement.style.setProperty('--font-scale', String(scale / 100));
+
+        const label = document.getElementById('font-scale-val');
+        if (label) label.innerText = scale + '%';
+        const range = document.getElementById('font-scale-range');
+        if (range) range.value = scale;
+
+        if (persist) saveSettingsDebounced();
+    }
+
+    function setFontScale(value) {
+        applyFontScale(value, true);
     }
 
     function pickCustomFont() {
@@ -6403,6 +7013,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
     function applyIconPackUI() {
         const valid = ['noto', 'material', 'pixel'].indexOf(settings.iconPack) !== -1 ? settings.iconPack : 'noto';
         settings.iconPack = valid;
+        document.body.setAttribute('data-icon-pack', valid);
         document.querySelectorAll('.icon-pack-card').forEach(card => {
             const active = card.getAttribute('data-icon-pack') === valid;
             card.classList.toggle('active', active);
@@ -6435,6 +7046,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         if (!wIcon || !h1) return;
         if (lastWeather) {
             wIcon.innerHTML = weatherEmoji(lastWeather.code, lastWeather.isDay);
+            animateWeatherIcon();
             const hourly = Array.isArray(lastWeather.hourly) ? lastWeather.hourly : [];
             for (let i = 0; i < 4; i++) {
                 const el = document.getElementById('h-icon-' + (i + 1));
@@ -6443,6 +7055,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             }
         } else {
             wIcon.innerHTML = weatherEmoji(2, true);
+            animateWeatherIcon();
             ['1', '2', '3'].forEach(i => {
                 const el = document.getElementById('h-icon-' + i);
                 if (el) el.innerHTML = weatherEmoji(2, true);
@@ -6450,6 +7063,17 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
             const h4 = document.getElementById('h-icon-4');
             if (h4) h4.innerHTML = weatherEmoji(0, false);
         }
+    }
+
+    let iconSwapTimer = null;
+    function animateWeatherIcon() {
+        const el = document.getElementById('w-icon');
+        if (!el || !settings.animations) return;
+        el.classList.remove('icon-swap');
+        void el.offsetWidth;
+        el.classList.add('icon-swap');
+        clearTimeout(iconSwapTimer);
+        iconSwapTimer = setTimeout(() => el.classList.remove('icon-swap'), 620);
     }
 
     // === ПЕРВИЧНАЯ ИНИЦИАЛИЗАЦИЯ ИНТЕРФЕЙСА ===
@@ -7290,6 +7914,7 @@ const I18N_TR = ["Şehir seçin", "Yakındaki hava — nerede olursanız olun", 
         updateSunArc(sunrise, sunset, w.localTime);
 
         document.getElementById('w-icon').innerHTML = weatherEmoji(code, isDay);
+        animateWeatherIcon();
         document.getElementById('desc-text').innerText = weatherDesc(code, isDay);
 
         // Обновляем капсулы почасового прогноза реальными данными

@@ -7,6 +7,7 @@ import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -30,6 +31,8 @@ import android.view.Window;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -57,6 +60,7 @@ public class MainActivity extends Activity {
             Pattern.compile("rgba?\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)");
 
     private static final int REQUEST_FONT = 4102;
+    private static final int REQUEST_WEB_FILE = 4103;
     private static final long MAX_FONT_BYTES = 10L * 1024L * 1024L;
     private static final String FONT_FILE = "user-font.ttf";
     private static final String FONT_PREFS = "pixel_weather_font";
@@ -66,6 +70,7 @@ public class MainActivity extends Activity {
     private WebView webView;
     private FrameLayout root;
     private WeatherSplashView splashView;
+    private ValueCallback<Uri[]> webFileCallback;
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     private volatile boolean appReady = false;
@@ -125,6 +130,26 @@ public class MainActivity extends Activity {
             }
         });
         webView.addJavascriptInterface(new ThemeBridge(), "Android");
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback,
+                                             FileChooserParams params) {
+                if (webFileCallback != null) {
+                    webFileCallback.onReceiveValue(null);
+                }
+                webFileCallback = callback;
+                try {
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, REQUEST_WEB_FILE);
+                    return true;
+                } catch (Exception e) {
+                    webFileCallback = null;
+                    return false;
+                }
+            }
+        });
 
         root = new FrameLayout(this);
         root.setBackgroundColor(launchBg);
@@ -234,6 +259,27 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_WEB_FILE) {
+            if (webFileCallback != null) {
+                Uri[] result = null;
+                if (resultCode == RESULT_OK && data != null) {
+                    if (data.getClipData() != null) {
+                        int count = data.getClipData().getItemCount();
+                        result = new Uri[count];
+                        for (int i = 0; i < count; i++) {
+                            result[i] = data.getClipData().getItemAt(i).getUri();
+                        }
+                    } else if (data.getData() != null) {
+                        result = new Uri[]{data.getData()};
+                    }
+                }
+                webFileCallback.onReceiveValue(result);
+                webFileCallback = null;
+            }
+            return;
+        }
+
         if (requestCode != REQUEST_FONT) return;
 
         if (resultCode != RESULT_OK || data == null || data.getData() == null) {
@@ -427,7 +473,32 @@ public class MainActivity extends Activity {
         return Math.round(hsv[0]) % 360;
     }
 
+    private int systemAccentHue() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return -1;
+        String[] names = {
+                "system_accent1_500", "system_accent1_400",
+                "system_accent2_500", "system_accent2_400",
+                "system_accent3_500", "system_accent3_400"
+        };
+        for (String name : names) {
+            try {
+                int id = getResources().getIdentifier(name, "color", "android");
+                if (id == 0) continue;
+                int hue = hueFromColor(getResources().getColor(id));
+                if (hue >= 0) return hue;
+            } catch (Exception ignored) {
+            }
+        }
+        return -1;
+    }
+
     public class ThemeBridge {
+        @JavascriptInterface
+        public String getSystemTheme() {
+            int mode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            return mode == Configuration.UI_MODE_NIGHT_YES ? "dark" : "light";
+        }
+
         @JavascriptInterface
         public int getWallpaperHue() {
             try {
@@ -457,6 +528,12 @@ public class MainActivity extends Activity {
                         }
                     }
                 }
+
+                // На части прошивок (например, One UI) getWallpaperColors()
+                // возвращает null сторонним приложениям. В Android 12+ берём
+                // системный accent-цвет Material You — он тоже построен по обоям.
+                int accentHue = systemAccentHue();
+                if (accentHue >= 0) return accentHue;
 
                 Drawable drawable = manager.getDrawable();
                 if (drawable != null) {
@@ -552,10 +629,22 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Пользователь мог сменить обои, пока приложение было в фоне
+        // Пользователь мог сменить обои или тему, пока приложение было в фоне
         if (webView != null) {
             webView.evaluateJavascript(
-                    "window.applyWallpaperIfEnabled && window.applyWallpaperIfEnabled();",
+                    "window.applyWallpaperIfEnabled && window.applyWallpaperIfEnabled();" +
+                    "window.onAndroidThemeChanged && window.onAndroidThemeChanged();",
+                    null
+            );
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (webView != null) {
+            webView.evaluateJavascript(
+                    "window.onAndroidThemeChanged && window.onAndroidThemeChanged();",
                     null
             );
         }
@@ -563,11 +652,20 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (webView != null && webView.canGoBack()) {
-            webView.goBack();
-        } else {
+        if (webView == null) {
             super.onBackPressed();
+            return;
         }
+
+        // Сначала спрашиваем веб-интерфейс: он закроет настройки,
+        // кастомизацию, «Что нового» или окно города. Если закрывать
+        // нечего — выходим из приложения.
+        webView.evaluateJavascript(
+                "(function(){try{return (typeof handleAndroidBack === 'function') ? handleAndroidBack() : false;}catch(e){return false;}})()",
+                value -> {
+                    if (!"true".equals(value)) finish();
+                }
+        );
     }
 
     @Override
